@@ -27,7 +27,7 @@
       </button>
     </div>
     <h1 class="text-xl font-bold tracking-wide text-strava flex items-center justify-center gap-2">
-      ⏱️ <span id="header-title">Vitae Veritas</span>
+      ⏱️ <span id="header-title">Veritas Vitae</span>
     </h1>
     <button onclick="toggleUserModal()" id="user-btn" class="bg-slate-700 hover:bg-slate-600 border border-slate-600 text-xs text-slate-100 font-bold px-2.5 py-1.5 rounded-xl flex items-center gap-1.5 transition-all active:scale-95 shadow-sm">
       <span id="user-avatar">👤</span>
@@ -558,6 +558,12 @@
       return `tt_${currentUser}_${key}`;
     }
 
+    function getLocalDateStr(dateInput = new Date()) {
+      const d = new Date(dateInput);
+      const pad = (n) => String(n).padStart(2, '0');
+      return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+    }
+
     function loadUserData() {
       let savedCat = localStorage.getItem(getStorageKey('categories')) || localStorage.getItem('tt_categories') || localStorage.getItem('categories');
       if (savedCat && !localStorage.getItem(getStorageKey('categories'))) {
@@ -575,6 +581,14 @@
 
       tasks = JSON.parse(localStorage.getItem(getStorageKey('tasks'))) || [];
       habits = JSON.parse(localStorage.getItem(getStorageKey('habits'))) || [];
+
+      // Auto-reparación de hábitos antiguos que pudieran tener la categoría o actividad como lista
+      let needsSave = false;
+      habits.forEach(h => {
+        if (Array.isArray(h.category)) { h.category = h.category[0]; needsSave = true; }
+        if (Array.isArray(h.activity)) { h.activity = h.activity[1] || h.category; needsSave = true; }
+      });
+      if (needsSave) saveUserData();
     }
 
     function saveUserData() {
@@ -607,7 +621,7 @@
       document.getElementById('time-subnav').classList.add('hidden');
       document.getElementById('back-btn').classList.add('hidden');
 
-      document.getElementById('header-title').innerText = 'Vitae Veritas';
+      document.getElementById('header-title').innerText = 'Veritas Vitae';
 
       ['time', 'tasks', 'habits'].forEach(s => {
         const btn = document.getElementById('main-btn-' + s);
@@ -624,7 +638,7 @@
       document.getElementById('back-btn').classList.remove('hidden');
 
       const titleMap = { time: 'Tiempo', tasks: 'Tareas', habits: 'Hábitos' };
-      document.getElementById('header-title').innerText = titleMap[section] || 'Vitae Veritas';
+      document.getElementById('header-title').innerText = titleMap[section] || 'Veritas Vitae';
 
       ['time', 'tasks', 'habits'].forEach(s => {
         const btn = document.getElementById('main-btn-' + s);
@@ -1204,7 +1218,7 @@
       }).join('');
     }
 
-    /* GESTIÓN DE HÁBITOS (CON HEATMAP, EDICIÓN Y TIEMPO MÍNIMO OPCIONAL) */
+    /* GESTIÓN DE HÁBITOS (CON CORRECCIÓN DE FICHAJE Y BOTÓN MANUAL) */
     function toggleHabitForm() {
       document.getElementById('habit-form-card').classList.toggle('hidden');
     }
@@ -1227,8 +1241,8 @@
       let activity = 'General';
       if (val) {
         const parts = val.split('|');
-        category = parts;
-        activity = parts;
+        category = parts[0];
+        activity = parts[1];
       }
 
       const newHabit = {
@@ -1258,7 +1272,7 @@
       const h = habits.find(x => x.id === id);
       if (!h) return;
       
-      const todayStr = new Date().toISOString().split('T');
+      const todayStr = getLocalDateStr(new Date());
       if (!h.manualLogs) h.manualLogs = {};
       h.manualLogs[todayStr] = (h.manualLogs[todayStr] || 0) + 1;
 
@@ -1270,9 +1284,12 @@
       const h = habits.find(x => x.id === id);
       if (!h) return;
 
+      const catName = Array.isArray(h.category) ? h.category[0] : h.category;
+      const actName = Array.isArray(h.activity) ? h.activity[1] : h.activity;
+
       document.getElementById('edit-habit-id').value = id;
       document.getElementById('edit-habit-title').value = h.title;
-      document.getElementById('edit-habit-activity').value = `${h.category}|${h.activity}`;
+      document.getElementById('edit-habit-activity').value = `${catName}|${actName}`;
       document.getElementById('edit-habit-desc').value = h.description || '';
       document.getElementById('edit-habit-freq').value = h.frequency;
       document.getElementById('edit-habit-target').value = h.targetCount;
@@ -1336,12 +1353,14 @@
     }
 
     function isHabitDoneOnDate(h, targetDate) {
-      const dateStr = targetDate.toISOString().split('T');
+      const dateStr = getLocalDateStr(targetDate);
       
+      const cat = Array.isArray(h.category) ? h.category[0] : h.category;
+      const act = Array.isArray(h.activity) ? h.activity[1] : h.activity;
+
       const dayRecords = records.filter(r => {
-        if (r.category !== h.category || r.activity !== h.activity) return false;
-        const rDate = new Date(r.startTime).toISOString().split('T');
-        return rDate === dateStr;
+        if (r.category !== cat || r.activity !== act) return false;
+        return getLocalDateStr(r.startTime) === dateStr;
       });
 
       const manualCount = (h.manualLogs && h.manualLogs[dateStr]) || 0;
@@ -1377,14 +1396,17 @@
       }
 
       const today = new Date();
-      const todayStr = today.toISOString().split('T');
+      const todayStr = getLocalDateStr(today);
 
       list.innerHTML = habits.map(h => {
+        if (Array.isArray(h.category)) h.category = h.category[0];
+        if (Array.isArray(h.activity)) h.activity = h.activity[1] || h.category;
+
         const catColor = getActivityColor(h.category);
 
         const todayRecords = records.filter(r => {
           if (r.category !== h.category || r.activity !== h.activity) return false;
-          return new Date(r.startTime).toISOString().split('T') === todayStr;
+          return getLocalDateStr(r.startTime) === todayStr;
         });
 
         const todayManual = (h.manualLogs && h.manualLogs[todayStr]) || 0;
