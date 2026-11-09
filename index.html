@@ -19,107 +19,259 @@
 </head>
 <body class="bg-slate-900 text-slate-100 min-h-screen pb-24 font-sans antialiased selection:bg-orange-500/30">
 
-  <!-- Header -->
-  <header class="bg-slate-800/90 backdrop-blur-md border-b border-slate-700 p-4 sticky top-0 z-10 shadow-md flex justify-between items-center">
-    <div class="w-16"></div>
+  <!-- Header con Selección de Usuario -->
+  <header class="bg-slate-800/90 backdrop-blur-md border-b border-slate-700 p-4 sticky top-0 z-30 shadow-md flex justify-between items-center">
+    <div class="w-12"></div>
     <h1 class="text-xl font-bold tracking-wide text-strava flex items-center justify-center gap-2">
-      ⏱️ <span>Control de Tiempo</span>
+      ⏱️ <span>Vitae Veritas</span>
     </h1>
-    <!-- Switcher de Usuario -->
     <button onclick="toggleUserModal()" id="user-btn" class="bg-slate-700 hover:bg-slate-600 border border-slate-600 text-xs text-slate-100 font-bold px-2.5 py-1.5 rounded-xl flex items-center gap-1.5 transition-all active:scale-95 shadow-sm">
       <span id="user-avatar">👤</span>
       <span id="user-name-label">Andres</span>
     </button>
   </header>
 
+  <!-- MENÚ PRINCIPAL SUPERIOR (3 SECCIONES) -->
+  <div class="bg-slate-800/80 border-b border-slate-700 sticky top-[65px] z-20 backdrop-blur-md px-2 py-1.5 flex justify-center gap-2">
+    <button onclick="switchMainSection('time')" id="main-nav-time" class="flex-1 max-w-[120px] py-2 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 transition-all bg-strava text-white shadow-sm">
+      <span>⏱️</span> <span>Tiempo</span>
+    </button>
+    <button onclick="switchMainSection('tasks')" id="main-nav-tasks" class="flex-1 max-w-[120px] py-2 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 transition-all bg-slate-900 text-slate-400 border border-slate-700/50">
+      <span>✅</span> <span>Tareas</span>
+    </button>
+    <button onclick="switchMainSection('habits')" id="main-nav-habits" class="flex-1 max-w-[120px] py-2 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 transition-all bg-slate-900 text-slate-400 border border-slate-700/50">
+      <span>🔥</span> <span>Hábitos</span>
+    </button>
+  </div>
+
   <main class="max-w-md mx-auto p-4 space-y-6">
 
-    <!-- TAB 1: FICHERO -->
-    <section id="tab-timer" class="tab-content space-y-5">
-      
-      <!-- Fichaje Activo -->
-      <div id="active-card" class="hidden bg-slate-800/90 border-2 border-strava rounded-2xl p-6 text-center shadow-lg animate-pulse">
-        <span class="text-xs uppercase tracking-widest text-strava font-semibold">En curso</span>
-        <h2 id="active-activity-title" class="text-2xl font-bold mt-1 text-white">---</h2>
-        <p id="active-category-subtitle" class="text-sm text-slate-400">---</p>
-        <p id="active-notes-subtitle" class="text-xs text-slate-300 italic my-2 bg-slate-900/60 p-2 rounded-lg hidden"></p>
-        <div id="timer-display" class="text-5xl font-mono font-extrabold my-4 text-orange-400">00:00:00</div>
-        <button onclick="stopTimer()" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3.5 px-6 rounded-xl text-lg shadow-md transition-all active:scale-95">
-          ⏹️ Fichar Fin
-        </button>
-      </div>
+    <!-- SECCIÓN 1: TIEMPO -->
+    <div id="section-time" class="main-section space-y-6">
 
-      <!-- Selector de Actividad -->
-      <div id="selection-card" class="bg-slate-800 border border-slate-700 rounded-2xl p-5 shadow-sm space-y-4">
-        <h3 class="text-base font-semibold text-slate-200">Nueva Actividad</h3>
+      <!-- SUB-TAB 1: FICHERO -->
+      <section id="tab-timer" class="time-tab-content space-y-5">
         
-        <div>
-          <label class="block text-xs text-slate-400 mb-1.5 font-medium">Seleccionar Actividad</label>
-          <select id="activity-select" onchange="autoAssignCategory()" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-slate-100 focus:outline-none focus:border-strava">
-          </select>
-        </div>
-
-        <div class="flex items-center space-x-2">
-          <span class="text-xs text-slate-400">Categoría:</span>
-          <span id="assigned-category-badge" class="bg-slate-900 border border-slate-700 text-xs font-bold px-2.5 py-1 rounded-md">
-            Trabajo
-          </span>
-        </div>
-
-        <div>
-          <label class="block text-xs text-slate-400 mb-1.5 font-medium">Notas / Detalles (Opcional)</label>
-          <input type="text" id="notes-input" placeholder="Ej: Proyecto X, Capítulo 3..." class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-slate-100 text-sm focus:outline-none focus:border-strava">
-        </div>
-
-        <button onclick="startTimer()" class="w-full bg-strava hover:bg-orange-600 text-white font-bold py-3.5 px-6 rounded-xl text-lg shadow-md transition-all active:scale-95">
-          ▶️ Fichar Inicio
-        </button>
-
-        <div class="pt-2 border-t border-slate-700/60 space-y-2">
-          <button onclick="toggleManualEntry()" class="w-full text-xs text-slate-400 hover:text-strava py-1 font-medium flex items-center justify-center gap-1">
-            <span>➕ Añadir actividad pasada</span>
-          </button>
-          <button onclick="openCatModal()" class="w-full text-xs text-slate-400 hover:text-strava py-1 font-medium flex items-center justify-center gap-1">
-            <span>⚙️ Personalizar Categorías y Actividades</span>
+        <!-- Fichaje Activo -->
+        <div id="active-card" class="hidden bg-slate-800/90 border-2 border-strava rounded-2xl p-6 text-center shadow-lg animate-pulse">
+          <span class="text-xs uppercase tracking-widest text-strava font-semibold">En curso</span>
+          <h2 id="active-activity-title" class="text-2xl font-bold mt-1 text-white">---</h2>
+          <p id="active-category-subtitle" class="text-sm text-slate-400">---</p>
+          <p id="active-notes-subtitle" class="text-xs text-slate-300 italic my-2 bg-slate-900/60 p-2 rounded-lg hidden"></p>
+          <div id="timer-display" class="text-5xl font-mono font-extrabold my-4 text-orange-400">00:00:00</div>
+          <button onclick="stopTimer()" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3.5 px-6 rounded-xl text-lg shadow-md transition-all active:scale-95">
+            ⏹️ Fichar Fin
           </button>
         </div>
-      </div>
 
-      <!-- Formulario de Entrada Manual -->
-      <div id="manual-entry-card" class="hidden bg-slate-800 border border-slate-700 rounded-2xl p-5 space-y-4">
-        <h3 class="text-sm font-bold text-slate-200">Añadir Registro Retroactivo</h3>
-        
-        <div>
-          <label class="block text-xs text-slate-400 mb-1">Actividad</label>
-          <select id="manual-activity-select" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-slate-100">
-          </select>
-        </div>
-
-        <div class="grid grid-cols-2 gap-3">
+        <!-- Selector de Actividad -->
+        <div id="selection-card" class="bg-slate-800 border border-slate-700 rounded-2xl p-5 shadow-sm space-y-4">
+          <h3 class="text-base font-semibold text-slate-200">Nueva Actividad</h3>
+          
           <div>
-            <label class="block text-xs text-slate-400 mb-1">Inicio</label>
-            <input type="datetime-local" id="manual-start" onchange="onStartDateTimeChange('manual')" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-xs text-slate-100">
+            <label class="block text-xs text-slate-400 mb-1.5 font-medium">Seleccionar Actividad</label>
+            <select id="activity-select" onchange="autoAssignCategory()" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-slate-100 focus:outline-none focus:border-strava">
+            </select>
           </div>
+
+          <div class="flex items-center space-x-2">
+            <span class="text-xs text-slate-400">Categoría:</span>
+            <span id="assigned-category-badge" class="bg-slate-900 border border-slate-700 text-xs font-bold px-2.5 py-1 rounded-md">
+              Trabajo
+            </span>
+          </div>
+
           <div>
-            <label class="block text-xs text-slate-400 mb-1">Fin</label>
-            <input type="datetime-local" id="manual-end" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-xs text-slate-100">
+            <label class="block text-xs text-slate-400 mb-1.5 font-medium">Notas / Detalles (Opcional)</label>
+            <input type="text" id="notes-input" placeholder="Ej: Proyecto X, Capítulo 3..." class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-slate-100 text-sm focus:outline-none focus:border-strava">
+          </div>
+
+          <button onclick="startTimer()" class="w-full bg-strava hover:bg-orange-600 text-white font-bold py-3.5 px-6 rounded-xl text-lg shadow-md transition-all active:scale-95">
+            ▶️ Fichar Inicio
+          </button>
+
+          <div class="pt-2 border-t border-slate-700/60 space-y-2">
+            <button onclick="toggleManualEntry()" class="w-full text-xs text-slate-400 hover:text-strava py-1 font-medium flex items-center justify-center gap-1">
+              <span>➕ Añadir actividad pasada</span>
+            </button>
+            <button onclick="openCatModal()" class="w-full text-xs text-slate-400 hover:text-strava py-1 font-medium flex items-center justify-center gap-1">
+              <span>⚙️ Personalizar Categorías y Actividades</span>
+            </button>
           </div>
         </div>
 
-        <div>
-          <label class="block text-xs text-slate-400 mb-1">Notas</label>
-          <input type="text" id="manual-notes" placeholder="Notas..." class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-slate-100">
+        <!-- Formulario de Entrada Manual con Botón "Ahora" -->
+        <div id="manual-entry-card" class="hidden bg-slate-800 border border-slate-700 rounded-2xl p-5 space-y-4">
+          <h3 class="text-sm font-bold text-slate-200">Añadir Registro Retroactivo</h3>
+          
+          <div>
+            <label class="block text-xs text-slate-400 mb-1">Actividad</label>
+            <select id="manual-activity-select" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-slate-100">
+            </select>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">Inicio</label>
+              <input type="datetime-local" id="manual-start" onchange="onStartDateTimeChange('manual')" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-xs text-slate-100">
+            </div>
+            <div>
+              <div class="flex justify-between items-center mb-1">
+                <label class="text-xs text-slate-400">Fin</label>
+                <button type="button" onclick="setNow('manual-end')" class="text-[10px] bg-slate-700 hover:bg-slate-600 text-strava px-1.5 py-0.5 rounded font-bold">⚡ Ahora</button>
+              </div>
+              <input type="datetime-local" id="manual-end" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-xs text-slate-100">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs text-slate-400 mb-1">Notas</label>
+            <input type="text" id="manual-notes" placeholder="Notas..." class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-slate-100">
+          </div>
+
+          <div class="flex gap-2">
+            <button onclick="saveManualRecord()" class="flex-1 bg-strava hover:bg-orange-600 text-white text-xs font-bold py-2.5 rounded-xl">Guardar</button>
+            <button onclick="toggleManualEntry()" class="bg-slate-700 text-slate-300 text-xs py-2.5 px-4 rounded-xl">Cancelar</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- SUB-TAB 2: OBJETIVOS -->
+      <section id="tab-goals" class="time-tab-content hidden space-y-5">
+        <div class="flex justify-between items-center">
+          <h3 class="text-lg font-bold text-slate-200">Tus Objetivos</h3>
+          <button onclick="toggleGoalForm()" class="bg-strava hover:bg-orange-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg">+ Nueva Meta</button>
         </div>
 
-        <div class="flex gap-2">
-          <button onclick="saveManualRecord()" class="flex-1 bg-strava hover:bg-orange-600 text-white text-xs font-bold py-2.5 rounded-xl">Guardar</button>
-          <button onclick="toggleManualEntry()" class="bg-slate-700 text-slate-300 text-xs py-2.5 px-4 rounded-xl">Cancelar</button>
-        </div>
-      </div>
-    </section>
+        <!-- Formulario Nuevo Objetivo -->
+        <div id="goal-form-card" class="hidden bg-slate-800 border border-slate-700 rounded-2xl p-4 space-y-3">
+          <h4 class="text-sm font-semibold text-slate-200">Crear Nuevo Objetivo</h4>
+          
+          <div>
+            <label class="block text-xs text-slate-400 mb-1">Tipo de Meta</label>
+            <select id="goal-target-type" onchange="updateGoalTargetOptions()" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-xs">
+              <option value="category">Por Categoría</option>
+              <option value="activity">Por Actividad</option>
+            </select>
+          </div>
 
-    <!-- TAB 2: TAREAS -->
-    <section id="tab-tasks" class="tab-content hidden space-y-5">
+          <div>
+            <label class="block text-xs text-slate-400 mb-1">Seleccionar Objetivo</label>
+            <select id="goal-target-value" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-xs"></select>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">Frecuencia</label>
+              <select id="goal-frequency" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-xs">
+                <option value="day">Diario</option>
+                <option value="week">Semanal</option>
+                <option value="month">Mensual</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">Horas Meta</label>
+              <input type="number" id="goal-target-hours" step="0.5" placeholder="Ej: 5" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-xs">
+            </div>
+          </div>
+
+          <div class="flex gap-2 pt-2">
+            <button onclick="saveGoal()" class="flex-1 bg-strava text-white text-xs font-bold py-2 rounded-xl">Guardar Objetivo</button>
+            <button onclick="toggleGoalForm()" class="bg-slate-700 text-slate-300 text-xs py-2 px-3 rounded-xl">Cancelar</button>
+          </div>
+        </div>
+
+        <!-- Lista de Objetivos -->
+        <div id="goals-list" class="space-y-3">
+          <p class="text-slate-500 text-center py-8 text-sm">No has configurado objetivos aún.</p>
+        </div>
+      </section>
+
+      <!-- SUB-TAB 3: HISTÓRICO -->
+      <section id="tab-history" class="time-tab-content hidden space-y-4">
+        <div class="flex justify-between items-center">
+          <h3 class="text-lg font-bold text-slate-200">Historial</h3>
+          <div class="flex items-center gap-3">
+            <button id="btn-sync-cloud" onclick="syncFromCloud()" class="text-xs text-strava hover:underline flex items-center gap-1 font-semibold">🔄 Cargar de la nube</button>
+            <button onclick="clearHistory()" class="text-xs text-red-400 hover:underline">Borrar todo</button>
+          </div>
+        </div>
+        <div id="history-list" class="space-y-2">
+          <p class="text-slate-500 text-center py-8 text-sm">No hay registros aún.</p>
+        </div>
+      </section>
+
+      <!-- SUB-TAB 4: ESTADÍSTICAS -->
+      <section id="tab-stats" class="time-tab-content hidden space-y-5">
+        <h3 class="text-lg font-bold text-slate-200">Resumen & Gráficas</h3>
+        
+        <!-- Filtros -->
+        <div class="bg-slate-800 border border-slate-700 rounded-2xl p-3 space-y-3">
+          <div class="flex justify-between items-center text-xs font-semibold text-slate-400">
+            <span>TIEMPO:</span>
+            <div class="space-x-1">
+              <button onclick="setPeriod('day')" id="btn-p-day" class="px-2 py-1 rounded-lg">Día</button>
+              <button onclick="setPeriod('week')" id="btn-p-week" class="px-2 py-1 rounded-lg">Semana</button>
+              <button onclick="setPeriod('month')" id="btn-p-month" class="px-2 py-1 rounded-lg">Mes</button>
+              <button onclick="setPeriod('year')" id="btn-p-year" class="px-2 py-1 rounded-lg">Año</button>
+              <button onclick="setPeriod('all')" id="btn-p-all" class="px-2 py-1 rounded-lg">Todo</button>
+            </div>
+          </div>
+
+          <div class="flex justify-between items-center text-xs font-semibold text-slate-400 border-t border-slate-700/60 pt-2.5">
+            <span>AGRUPAR:</span>
+            <div class="space-x-1">
+              <button onclick="setGroupBy('category')" id="btn-g-category" class="px-3 py-1 rounded-lg">Categorías</button>
+              <button onclick="setGroupBy('activity')" id="btn-g-activity" class="px-3 py-1 rounded-lg">Actividades</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Gráfico -->
+        <div class="bg-slate-800 border border-slate-700 rounded-2xl p-4 shadow-sm">
+          <div id="chart-title" class="text-xs font-semibold text-slate-400 mb-2">Distribución</div>
+          <div class="relative h-64">
+            <canvas id="statsChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Totales -->
+        <div id="stats-totals" class="grid grid-cols-2 gap-3"></div>
+
+        <!-- Desglose de Registros Individuales de Actividad -->
+        <div id="activity-drilldown-container" class="hidden bg-slate-800 border border-slate-700 rounded-2xl p-4 space-y-3">
+          <div class="flex justify-between items-center border-b border-slate-700 pb-2">
+            <h4 id="drilldown-title" class="text-sm font-bold text-strava">Registros de Actividad</h4>
+            <button onclick="closeActivityDrilldown()" class="text-xs text-slate-400 hover:text-white">✕ Cerrar</button>
+          </div>
+          <div id="drilldown-records-list" class="space-y-2 max-h-60 overflow-y-auto"></div>
+        </div>
+      </section>
+
+      <!-- Navegación Inferior exclusiva de TIEMPO (4 Sub-pestañas) -->
+      <nav id="time-subnav" class="fixed bottom-0 left-0 right-0 bg-slate-800/95 backdrop-blur-md border-t border-slate-700 flex justify-around p-2 z-20">
+        <button onclick="switchTimeTab('timer')" id="nav-timer" class="flex flex-col items-center py-1 px-3 text-strava font-semibold text-[10px]">
+          <span class="text-base">⏱️</span>
+          <span>Fichar</span>
+        </button>
+        <button onclick="switchTimeTab('goals')" id="nav-goals" class="flex flex-col items-center py-1 px-3 text-slate-400 font-semibold text-[10px]">
+          <span class="text-base">🎯</span>
+          <span>Objetivos</span>
+        </button>
+        <button onclick="switchTimeTab('history')" id="nav-history" class="flex flex-col items-center py-1 px-3 text-slate-400 font-semibold text-[10px]">
+          <span class="text-base">📋</span>
+          <span>Histórico</span>
+        </button>
+        <button onclick="switchTimeTab('stats')" id="nav-stats" class="flex flex-col items-center py-1 px-3 text-slate-400 font-semibold text-[10px]">
+          <span class="text-base">📊</span>
+          <span>Gráficas</span>
+        </button>
+      </nav>
+
+    </div>
+
+    <!-- SECCIÓN 2: TAREAS (CON TAREAS RECURRENTES) -->
+    <div id="section-tasks" class="main-section hidden space-y-5">
       <div class="flex justify-between items-center">
         <h3 class="text-lg font-bold text-slate-200">Tus Tareas</h3>
         <button onclick="toggleTaskForm()" class="bg-strava hover:bg-orange-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg">+ Nueva Tarea</button>
@@ -139,9 +291,29 @@
           <input type="text" id="task-notes-input" placeholder="Detalles extra..." class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-slate-100">
         </div>
 
-        <div class="flex items-center space-x-2 pt-1">
-          <input type="checkbox" id="task-urgent-input" class="w-4 h-4 accent-orange-500 rounded">
-          <label for="task-urgent-input" class="text-xs text-slate-300 font-semibold cursor-pointer">🔥 Marcar como urgente</label>
+        <div class="flex items-center space-x-4 pt-1">
+          <label class="flex items-center space-x-1.5 text-xs text-slate-300 font-semibold cursor-pointer">
+            <input type="checkbox" id="task-urgent-input" class="w-4 h-4 accent-orange-500 rounded">
+            <span>🔥 Urgente</span>
+          </label>
+          <label class="flex items-center space-x-1.5 text-xs text-slate-300 font-semibold cursor-pointer">
+            <input type="checkbox" id="task-recurring-input" onchange="toggleTaskDaysSelector()" class="w-4 h-4 accent-orange-500 rounded">
+            <span>🔁 Recurrente</span>
+          </label>
+        </div>
+
+        <!-- Selector de días si es recurrente -->
+        <div id="task-days-container" class="hidden bg-slate-900/60 p-2.5 rounded-xl border border-slate-700 space-y-1">
+          <span class="text-[10px] text-slate-400 font-bold uppercase">Días de repetición:</span>
+          <div class="flex justify-between gap-1">
+            <button type="button" onclick="toggleDaySelection(this, 'L')" class="day-btn flex-1 py-1 bg-slate-800 border border-slate-700 text-xs font-bold rounded-lg">L</button>
+            <button type="button" onclick="toggleDaySelection(this, 'M')" class="day-btn flex-1 py-1 bg-slate-800 border border-slate-700 text-xs font-bold rounded-lg">M</button>
+            <button type="button" onclick="toggleDaySelection(this, 'X')" class="day-btn flex-1 py-1 bg-slate-800 border border-slate-700 text-xs font-bold rounded-lg">X</button>
+            <button type="button" onclick="toggleDaySelection(this, 'J')" class="day-btn flex-1 py-1 bg-slate-800 border border-slate-700 text-xs font-bold rounded-lg">J</button>
+            <button type="button" onclick="toggleDaySelection(this, 'V')" class="day-btn flex-1 py-1 bg-slate-800 border border-slate-700 text-xs font-bold rounded-lg">V</button>
+            <button type="button" onclick="toggleDaySelection(this, 'S')" class="day-btn flex-1 py-1 bg-slate-800 border border-slate-700 text-xs font-bold rounded-lg">S</button>
+            <button type="button" onclick="toggleDaySelection(this, 'D')" class="day-btn flex-1 py-1 bg-slate-800 border border-slate-700 text-xs font-bold rounded-lg">D</button>
+          </div>
         </div>
 
         <div class="flex gap-2 pt-2">
@@ -154,124 +326,66 @@
       <div id="tasks-list" class="space-y-2.5">
         <p class="text-slate-500 text-center py-8 text-sm">No tienes tareas pendientes.</p>
       </div>
-    </section>
+    </div>
 
-    <!-- TAB 3: OBJETIVOS -->
-    <section id="tab-goals" class="tab-content hidden space-y-5">
+    <!-- SECCIÓN 3: HÁBITOS (HABIT TRACKER) -->
+    <div id="section-habits" class="main-section hidden space-y-5">
       <div class="flex justify-between items-center">
-        <h3 class="text-lg font-bold text-slate-200">Tus Objetivos</h3>
-        <button onclick="toggleGoalForm()" class="bg-strava hover:bg-orange-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg">+ Nueva Meta</button>
+        <h3 class="text-lg font-bold text-slate-200">Hábitos</h3>
+        <button onclick="toggleHabitForm()" class="bg-strava hover:bg-orange-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg">+ Nuevo Hábito</button>
       </div>
 
-      <!-- Formulario Nuevo Objetivo -->
-      <div id="goal-form-card" class="hidden bg-slate-800 border border-slate-700 rounded-2xl p-4 space-y-3">
-        <h4 class="text-sm font-semibold text-slate-200">Crear Nuevo Objetivo</h4>
+      <!-- Formulario Nuevo Hábito -->
+      <div id="habit-form-card" class="hidden bg-slate-800 border border-slate-700 rounded-2xl p-4 space-y-3">
+        <h4 class="text-sm font-semibold text-slate-200">Crear Hábito</h4>
         
         <div>
-          <label class="block text-xs text-slate-400 mb-1">Tipo de Meta</label>
-          <select id="goal-target-type" onchange="updateGoalTargetOptions()" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-xs">
-            <option value="category">Por Categoría</option>
-            <option value="activity">Por Actividad</option>
-          </select>
+          <label class="block text-xs text-slate-400 mb-1">Nombre del Hábito</label>
+          <input type="text" id="habit-title-input" placeholder="Ej: Beber agua, Meditar, Leer..." class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-slate-100">
         </div>
 
         <div>
-          <label class="block text-xs text-slate-400 mb-1">Seleccionar Objetivo</label>
-          <select id="goal-target-value" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-xs"></select>
+          <label class="block text-xs text-slate-400 mb-1">Descripción / Notas (Se abre al pulsar)</label>
+          <textarea id="habit-desc-input" rows="2" placeholder="Detalles o motivación de este hábito..." class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-slate-100"></textarea>
         </div>
 
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="block text-xs text-slate-400 mb-1">Frecuencia</label>
-            <select id="goal-frequency" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-xs">
-              <option value="day">Diario</option>
-              <option value="week">Semanal</option>
-              <option value="month">Mensual</option>
+            <select id="habit-freq-input" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-xs">
+              <option value="Diario">Diario</option>
+              <option value="Semanal">Semanal</option>
+              <option value="Mensual">Mensual</option>
             </select>
           </div>
           <div>
-            <label class="block text-xs text-slate-400 mb-1">Horas Meta</label>
-            <input type="number" id="goal-target-hours" step="0.5" placeholder="Ej: 5" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-xs">
+            <label class="block text-xs text-slate-400 mb-1">Veces al período</label>
+            <input type="number" id="habit-target-input" value="1" min="1" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-xs">
           </div>
         </div>
 
         <div class="flex gap-2 pt-2">
-          <button onclick="saveGoal()" class="flex-1 bg-strava text-white text-xs font-bold py-2 rounded-xl">Guardar Objetivo</button>
-          <button onclick="toggleGoalForm()" class="bg-slate-700 text-slate-300 text-xs py-2 px-3 rounded-xl">Cancelar</button>
+          <button onclick="saveHabit()" class="flex-1 bg-strava text-white text-xs font-bold py-2 rounded-xl">Guardar Hábito</button>
+          <button onclick="toggleHabitForm()" class="bg-slate-700 text-slate-300 text-xs py-2 px-3 rounded-xl">Cancelar</button>
         </div>
       </div>
 
-      <!-- Lista de Objetivos -->
-      <div id="goals-list" class="space-y-3">
-        <p class="text-slate-500 text-center py-8 text-sm">No has configurado objetivos aún.</p>
+      <!-- Lista de Hábitos -->
+      <div id="habits-list" class="space-y-3">
+        <p class="text-slate-500 text-center py-8 text-sm">No has añadido hábitos aún.</p>
       </div>
-    </section>
-
-    <!-- TAB 4: HISTÓRICO -->
-    <section id="tab-history" class="tab-content hidden space-y-4">
-      <div class="flex justify-between items-center">
-        <h3 class="text-lg font-bold text-slate-200">Historial</h3>
-        <div class="flex items-center gap-3">
-          <button id="btn-sync-cloud" onclick="syncFromCloud()" class="text-xs text-strava hover:underline flex items-center gap-1 font-semibold">🔄 Cargar de la nube</button>
-          <button onclick="clearHistory()" class="text-xs text-red-400 hover:underline">Borrar todo</button>
-        </div>
-      </div>
-      <div id="history-list" class="space-y-2">
-        <p class="text-slate-500 text-center py-8 text-sm">No hay registros aún.</p>
-      </div>
-    </section>
-
-    <!-- TAB 5: ESTADÍSTICAS -->
-    <section id="tab-stats" class="tab-content hidden space-y-5">
-      <h3 class="text-lg font-bold text-slate-200">Resumen & Gráficas</h3>
-      
-      <!-- Filtros -->
-      <div class="bg-slate-800 border border-slate-700 rounded-2xl p-3 space-y-3">
-        <div class="flex justify-between items-center text-xs font-semibold text-slate-400">
-          <span>TIEMPO:</span>
-          <div class="space-x-1">
-            <button onclick="setPeriod('day')" id="btn-p-day" class="px-2 py-1 rounded-lg">Día</button>
-            <button onclick="setPeriod('week')" id="btn-p-week" class="px-2 py-1 rounded-lg">Semana</button>
-            <button onclick="setPeriod('month')" id="btn-p-month" class="px-2 py-1 rounded-lg">Mes</button>
-            <button onclick="setPeriod('year')" id="btn-p-year" class="px-2 py-1 rounded-lg">Año</button>
-            <button onclick="setPeriod('all')" id="btn-p-all" class="px-2 py-1 rounded-lg">Todo</button>
-          </div>
-        </div>
-
-        <div class="flex justify-between items-center text-xs font-semibold text-slate-400 border-t border-slate-700/60 pt-2.5">
-          <span>AGRUPAR:</span>
-          <div class="space-x-1">
-            <button onclick="setGroupBy('category')" id="btn-g-category" class="px-3 py-1 rounded-lg">Categorías</button>
-            <button onclick="setGroupBy('activity')" id="btn-g-activity" class="px-3 py-1 rounded-lg">Actividades</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Gráfico -->
-      <div class="bg-slate-800 border border-slate-700 rounded-2xl p-4 shadow-sm">
-        <div id="chart-title" class="text-xs font-semibold text-slate-400 mb-2">Distribución</div>
-        <div class="relative h-64">
-          <canvas id="statsChart"></canvas>
-        </div>
-      </div>
-
-      <!-- Totales -->
-      <div id="stats-totals" class="grid grid-cols-2 gap-3"></div>
-    </section>
+    </div>
 
   </main>
 
-  <!-- MODAL CAMBIO DE USUARIO (DINÁMICO CON BOTÓN DE CREAR USUARIO) -->
+  <!-- MODAL CAMBIO DE USUARIO -->
   <div id="user-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden">
     <div class="bg-slate-800 border border-slate-700 rounded-2xl p-5 w-full max-w-sm text-center space-y-4 max-h-[85vh] flex flex-col">
       <h3 class="text-base font-bold text-slate-200">Seleccionar Usuario</h3>
-      <p class="text-xs text-slate-400">Cada usuario gestiona de forma independiente sus registros, categorías y tareas.</p>
+      <p class="text-xs text-slate-400">Cada usuario gestiona de forma independiente sus registros, categorías, tareas y hábitos.</p>
       
-      <div id="user-list-container" class="space-y-2 pt-1 overflow-y-auto flex-1 pr-1">
-        <!-- Generado dinámicamente -->
-      </div>
+      <div id="user-list-container" class="space-y-2 pt-1 overflow-y-auto flex-1 pr-1"></div>
 
-      <!-- Formulario para añadir nuevo usuario -->
       <div class="border-t border-slate-700 pt-3 space-y-2">
         <h4 class="text-xs font-bold text-slate-300 text-left">+ Añadir Nuevo Usuario</h4>
         <div class="flex gap-2">
@@ -284,7 +398,7 @@
     </div>
   </div>
 
-  <!-- MODAL DE PERSONALIZACIÓN DE CATEGORÍAS Y ACTIVIDADES -->
+  <!-- MODAL DE PERSONALIZACIÓN DE CATEGORÍAS -->
   <div id="cat-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden">
     <div class="bg-slate-800 border border-slate-700 rounded-2xl p-5 w-full max-w-sm space-y-4 max-h-[85vh] flex flex-col">
       <div class="flex justify-between items-center border-b border-slate-700 pb-3">
@@ -292,11 +406,8 @@
         <button onclick="closeCatModal()" class="text-slate-400 hover:text-white text-sm">✕</button>
       </div>
 
-      <div id="cat-modal-content" class="overflow-y-auto space-y-4 flex-1 pr-1">
-        <!-- Generado dinámicamente -->
-      </div>
+      <div id="cat-modal-content" class="overflow-y-auto space-y-4 flex-1 pr-1"></div>
 
-      <!-- Añadir nueva categoría -->
       <div class="border-t border-slate-700 pt-3 space-y-2">
         <h4 class="text-xs font-bold text-slate-300">+ Añadir Nueva Categoría</h4>
         <div class="flex gap-2">
@@ -328,7 +439,10 @@
           <input type="datetime-local" id="edit-start" onchange="onStartDateTimeChange('edit')" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-xs text-slate-100">
         </div>
         <div>
-          <label class="block text-xs text-slate-400 mb-1">Fecha/Hora Fin</label>
+          <div class="flex justify-between items-center mb-1">
+            <label class="text-xs text-slate-400">Fecha/Hora Fin</label>
+            <button type="button" onclick="setNow('edit-end')" class="text-[10px] bg-slate-700 hover:bg-slate-600 text-strava px-1.5 py-0.5 rounded font-bold">⚡ Ahora</button>
+          </div>
           <input type="datetime-local" id="edit-end" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-xs text-slate-100">
         </div>
       </div>
@@ -341,34 +455,6 @@
       <div class="flex gap-2 pt-2">
         <button onclick="saveEditRecord()" class="flex-1 bg-strava text-white text-xs font-bold py-2.5 rounded-xl">Guardar Cambios</button>
         <button onclick="closeEditModal()" class="bg-slate-700 text-slate-300 text-xs py-2.5 px-4 rounded-xl">Cancelar</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL DE EDICIÓN DE TAREA -->
-  <div id="edit-task-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden">
-    <div class="bg-slate-800 border border-slate-700 rounded-2xl p-5 w-full max-w-sm space-y-4">
-      <h3 class="text-base font-bold text-slate-200">Editar Tarea</h3>
-      <input type="hidden" id="edit-task-id">
-      
-      <div>
-        <label class="block text-xs text-slate-400 mb-1">Título</label>
-        <input type="text" id="edit-task-title" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-slate-100">
-      </div>
-
-      <div>
-        <label class="block text-xs text-slate-400 mb-1">Notas / Detalle</label>
-        <input type="text" id="edit-task-notes" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-slate-100">
-      </div>
-
-      <div class="flex items-center space-x-2 pt-1">
-        <input type="checkbox" id="edit-task-urgent" class="w-4 h-4 accent-orange-500 rounded">
-        <label for="edit-task-urgent" class="text-xs text-slate-300 font-semibold cursor-pointer">🔥 Marcar como urgente</label>
-      </div>
-
-      <div class="flex gap-2 pt-2">
-        <button onclick="saveEditedTask()" class="flex-1 bg-strava text-white text-xs font-bold py-2.5 rounded-xl">Guardar Cambios</button>
-        <button onclick="closeEditTaskModal()" class="bg-slate-700 text-slate-300 text-xs py-2.5 px-4 rounded-xl">Cancelar</button>
       </div>
     </div>
   </div>
@@ -403,29 +489,20 @@
     </div>
   </div>
 
-  <!-- Navegación Inferior (5 Pestañas) -->
-  <nav class="fixed bottom-0 left-0 right-0 bg-slate-800/95 backdrop-blur-md border-t border-slate-700 flex justify-around p-2 z-20">
-    <button onclick="switchTab('timer')" id="nav-timer" class="flex flex-col items-center py-1 px-2 text-strava font-semibold text-[10px]">
-      <span class="text-base">⏱️</span>
-      <span>Fichar</span>
-    </button>
-    <button onclick="switchTab('tasks')" id="nav-tasks" class="flex flex-col items-center py-1 px-2 text-slate-400 font-semibold text-[10px]">
-      <span class="text-base">✅</span>
-      <span>Tareas</span>
-    </button>
-    <button onclick="switchTab('goals')" id="nav-goals" class="flex flex-col items-center py-1 px-2 text-slate-400 font-semibold text-[10px]">
-      <span class="text-base">🎯</span>
-      <span>Objetivos</span>
-    </button>
-    <button onclick="switchTab('history')" id="nav-history" class="flex flex-col items-center py-1 px-2 text-slate-400 font-semibold text-[10px]">
-      <span class="text-base">📋</span>
-      <span>Histórico</span>
-    </button>
-    <button onclick="switchTab('stats')" id="nav-stats" class="flex flex-col items-center py-1 px-2 text-slate-400 font-semibold text-[10px]">
-      <span class="text-base">📊</span>
-      <span>Gráficas</span>
-    </button>
-  </nav>
+  <!-- MODAL DE CONFIRMACIÓN BORRAR HÁBITO -->
+  <div id="delete-habit-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden">
+    <div class="bg-slate-800 border border-slate-700 rounded-2xl p-5 w-full max-w-sm text-center space-y-4">
+      <div class="text-3xl">⚠️</div>
+      <h3 class="text-base font-bold text-slate-200">¿Borrar este hábito?</h3>
+      <p class="text-xs text-slate-400">Esta acción no se puede deshacer.</p>
+      <input type="hidden" id="delete-habit-id">
+      
+      <div class="flex gap-2 pt-2">
+        <button onclick="confirmDeleteHabit()" class="flex-1 bg-red-600 hover:bg-red-700 text-white text-xs font-bold py-2.5 rounded-xl">Sí, Borrar</button>
+        <button onclick="closeDeleteHabitModal()" class="flex-1 bg-slate-700 text-slate-300 text-xs py-2.5 rounded-xl">Cancelar</button>
+      </div>
+    </div>
+  </div>
 
   <!-- Lógica JavaScript -->
   <script>
@@ -448,6 +525,9 @@
     let records = [];
     let goals = [];
     let tasks = [];
+    let habits = [];
+
+    let selectedTaskDays = [];
     let timerInterval = null;
     let chartInstance = null;
 
@@ -465,6 +545,7 @@
       records = JSON.parse(localStorage.getItem(getStorageKey('records'))) || [];
       goals = JSON.parse(localStorage.getItem(getStorageKey('goals'))) || [];
       tasks = JSON.parse(localStorage.getItem(getStorageKey('tasks'))) || [];
+      habits = JSON.parse(localStorage.getItem(getStorageKey('habits'))) || [];
     }
 
     function saveUserData() {
@@ -473,6 +554,7 @@
       localStorage.setItem(getStorageKey('records'), JSON.stringify(records));
       localStorage.setItem(getStorageKey('goals'), JSON.stringify(goals));
       localStorage.setItem(getStorageKey('tasks'), JSON.stringify(tasks));
+      localStorage.setItem(getStorageKey('habits'), JSON.stringify(habits));
       localStorage.setItem('tt_user_list', JSON.stringify(userList));
     }
 
@@ -486,6 +568,45 @@
         navigator.serviceWorker.register('sw.js').catch(err => console.log('SW error:', err));
       }
     });
+
+    /* NAVEGACIÓN PRINCIPAL (3 SECCIONES) */
+    function switchMainSection(section) {
+      document.querySelectorAll('.main-section').forEach(el => el.classList.add('hidden'));
+      document.getElementById('section-' + section).classList.remove('hidden');
+
+      ['time', 'tasks', 'habits'].forEach(s => {
+        const btn = document.getElementById('main-nav-' + s);
+        if (s === section) {
+          btn.className = "flex-1 max-w-[120px] py-2 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 transition-all bg-strava text-white shadow-sm";
+        } else {
+          btn.className = "flex-1 max-w-[120px] py-2 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 transition-all bg-slate-900 text-slate-400 border border-slate-700/50";
+        }
+      });
+
+      if (section === 'tasks') renderTasks();
+      if (section === 'habits') renderHabits();
+    }
+
+    function switchTimeTab(tab) {
+      document.querySelectorAll('.time-tab-content').forEach(el => el.classList.add('hidden'));
+      document.getElementById('tab-' + tab).classList.remove('hidden');
+
+      document.querySelectorAll('#time-subnav button').forEach(el => {
+        el.classList.remove('text-strava');
+        el.classList.add('text-slate-400');
+      });
+      document.getElementById('nav-' + tab).classList.add('text-strava');
+      document.getElementById('nav-' + tab).classList.remove('text-slate-400');
+
+      if (tab === 'stats') renderStats();
+      if (tab === 'goals') renderGoals();
+    }
+
+    /* BOTÓN AHORA (NOW) */
+    function setNow(inputId) {
+      const el = document.getElementById(inputId);
+      if (el) el.value = formatForDatetimeLocal(Date.now());
+    }
 
     /* GESTIÓN DE USUARIOS */
     function toggleUserModal() {
@@ -524,10 +645,7 @@
     function createNewUser() {
       const input = document.getElementById('new-user-name');
       const rawName = input.value.trim();
-      if (!rawName) {
-        alert('Por favor ingresa un nombre.');
-        return;
-      }
+      if (!rawName) return;
       const slug = rawName.toLowerCase().replace(/\s+/g, '');
       if (userList.includes(slug)) {
         alert('Este usuario ya existe.');
@@ -568,7 +686,7 @@
 
     function autoAssignCategory() {
       const selectEl = document.getElementById('activity-select');
-      if (!selectEl.value) return;
+      if (!selectEl || !selectEl.value) return;
       const [category] = selectEl.value.split('|');
       const badge = document.getElementById('assigned-category-badge');
       badge.innerText = category;
@@ -595,7 +713,7 @@
       autoAssignCategory();
     }
 
-    /* MODAL DE PERSONALIZACIÓN DE CATEGORÍAS */
+    /* MODAL CONFIGURACIÓN CATEGORÍAS */
     function openCatModal() {
       renderCatModalContent();
       document.getElementById('cat-modal').classList.remove('hidden');
@@ -624,7 +742,6 @@
               <button onclick="deleteCategory('${cat}')" class="text-red-400 hover:text-red-300 text-xs">🗑️ Borrar</button>
             </div>
 
-            <!-- Lista de actividades -->
             <div class="pl-3 border-l-2 border-slate-700 space-y-1 pt-1">
               ${catObj.items.map(act => `
                 <div class="flex justify-between items-center text-xs text-slate-300">
@@ -658,10 +775,7 @@
       const name = nameInput.value.trim();
       const color = colorInput.value;
 
-      if (!name) {
-        alert('Ingresa un nombre para la categoría.');
-        return;
-      }
+      if (!name) return;
       if (categories[name]) {
         alert('Esta categoría ya existe.');
         return;
@@ -674,7 +788,7 @@
     }
 
     function deleteCategory(cat) {
-      if (confirm(`¿Borrar la categoría "${cat}" y todas sus actividades?`)) {
+      if (confirm(`¿Borrar la categoría "${cat}" y sus actividades?`)) {
         delete categories[cat];
         saveUserData();
         renderCatModalContent();
@@ -687,7 +801,7 @@
 
       if (!actName) return;
       if (categories[cat].items.includes(actName)) {
-        alert('Esta actividad ya existe en esta categoría.');
+        alert('Esta actividad ya existe.');
         return;
       }
 
@@ -706,7 +820,7 @@
     function startTimer() {
       const val = document.getElementById('activity-select').value;
       if (!val) {
-        alert('Por favor añade primero al menos una actividad.');
+        alert('Añade primero una actividad.');
         return;
       }
       const [category, activity] = val.split('|');
@@ -760,17 +874,14 @@
 
     function saveManualRecord() {
       const val = document.getElementById('manual-activity-select').value;
-      if (!val) {
-        alert('Por favor selecciona una actividad.');
-        return;
-      }
+      if (!val) return;
       const [category, activity] = val.split('|');
       const startVal = document.getElementById('manual-start').value;
       const endVal = document.getElementById('manual-end').value;
       const notes = document.getElementById('manual-notes').value.trim();
 
       if (!startVal || !endVal) {
-        alert('Por favor selecciona hora de inicio y fin.');
+        alert('Selecciona inicio y fin.');
         return;
       }
 
@@ -859,7 +970,7 @@
           renderUI();
           alert(`Sincronización completada (${currentUser}). ${added} registros cargados/actualizados.`);
         } else {
-          alert(`No se encontraron registros en la nube para ${currentUser}.`);
+          alert(`No se encontraron registros para ${currentUser}.`);
         }
       } catch (err) {
         alert('Error conectando con la nube.');
@@ -892,22 +1003,51 @@
 
       renderHistory();
       renderTasks();
+      renderHabits();
       renderGoals();
       renderStats();
     }
 
-    /* GESTIÓN DE TAREAS */
+    /* GESTIÓN DE TAREAS (CON RECURRENCIA) */
     function toggleTaskForm() {
       document.getElementById('task-form-card').classList.toggle('hidden');
+    }
+
+    function toggleTaskDaysSelector() {
+      const isRec = document.getElementById('task-recurring-input').checked;
+      const container = document.getElementById('task-days-container');
+      if (isRec) {
+        container.classList.remove('hidden');
+      } else {
+        container.classList.add('hidden');
+        selectedTaskDays = [];
+        document.querySelectorAll('.day-btn').forEach(b => {
+          b.classList.remove('bg-strava', 'text-white');
+          b.classList.add('bg-slate-800');
+        });
+      }
+    }
+
+    function toggleDaySelection(btn, day) {
+      if (selectedTaskDays.includes(day)) {
+        selectedTaskDays = selectedTaskDays.filter(d => d !== day);
+        btn.classList.remove('bg-strava', 'text-white');
+        btn.classList.add('bg-slate-800');
+      } else {
+        selectedTaskDays.push(day);
+        btn.classList.add('bg-strava', 'text-white');
+        btn.classList.remove('bg-slate-800');
+      }
     }
 
     function saveTask() {
       const title = document.getElementById('task-title-input').value.trim();
       const notes = document.getElementById('task-notes-input').value.trim();
       const urgent = document.getElementById('task-urgent-input').checked;
+      const recurring = document.getElementById('task-recurring-input').checked;
 
       if (!title) {
-        alert('Por favor ingresa un título para la tarea.');
+        alert('Ingresa un título.');
         return;
       }
 
@@ -916,6 +1056,8 @@
         title,
         notes,
         urgent,
+        recurring,
+        days: recurring ? [...selectedTaskDays] : [],
         completed: false
       };
 
@@ -925,6 +1067,8 @@
       document.getElementById('task-title-input').value = '';
       document.getElementById('task-notes-input').value = '';
       document.getElementById('task-urgent-input').checked = false;
+      document.getElementById('task-recurring-input').checked = false;
+      toggleTaskDaysSelector();
       toggleTaskForm();
       renderTasks();
     }
@@ -936,42 +1080,6 @@
         saveUserData();
         renderTasks();
       }
-    }
-
-    function openEditTaskModal(id) {
-      const t = tasks.find(x => x.id === id);
-      if (!t) return;
-      document.getElementById('edit-task-id').value = id;
-      document.getElementById('edit-task-title').value = t.title;
-      document.getElementById('edit-task-notes').value = t.notes || '';
-      document.getElementById('edit-task-urgent').checked = t.urgent || false;
-      document.getElementById('edit-task-modal').classList.remove('hidden');
-    }
-
-    function closeEditTaskModal() {
-      document.getElementById('edit-task-modal').classList.add('hidden');
-    }
-
-    function saveEditedTask() {
-      const id = parseInt(document.getElementById('edit-task-id').value);
-      const title = document.getElementById('edit-task-title').value.trim();
-      const notes = document.getElementById('edit-task-notes').value.trim();
-      const urgent = document.getElementById('edit-task-urgent').checked;
-
-      if (!title) {
-        alert('El título no puede estar vacío.');
-        return;
-      }
-
-      const t = tasks.find(x => x.id === id);
-      if (t) {
-        t.title = title;
-        t.notes = notes;
-        t.urgent = urgent;
-        saveUserData();
-        renderTasks();
-      }
-      closeEditTaskModal();
     }
 
     function openDeleteTaskModal(id) {
@@ -1005,6 +1113,8 @@
       });
 
       list.innerHTML = sorted.map(t => {
+        const daysText = t.recurring ? (t.days.length > 0 ? t.days.join(', ') : 'Diaria') : '';
+
         return `
           <div class="bg-slate-800 border ${t.completed ? 'border-slate-800 opacity-50' : (t.urgent ? 'border-orange-500/80 bg-orange-950/10' : 'border-slate-700')} rounded-xl p-3 flex items-start justify-between gap-3 transition-all">
             <div class="flex items-start gap-3 flex-1 min-w-0">
@@ -1013,14 +1123,120 @@
                 <div class="flex items-center gap-1.5 flex-wrap">
                   <span class="text-sm font-bold ${t.completed ? 'line-through text-slate-400' : 'text-white'}">${t.title}</span>
                   ${t.urgent && !t.completed ? '<span class="bg-red-500/20 text-red-400 border border-red-500/30 text-[10px] font-bold px-1.5 py-0.5 rounded">🔥 Urgente</span>' : ''}
+                  ${t.recurring ? `<span class="bg-blue-500/20 text-blue-400 border border-blue-500/30 text-[10px] font-bold px-1.5 py-0.5 rounded">🔁 ${daysText}</span>` : ''}
                 </div>
                 ${t.notes ? `<p class="text-xs text-slate-400 mt-0.5 ${t.completed ? 'line-through' : ''}">${t.notes}</p>` : ''}
               </div>
             </div>
 
             <div class="flex items-center space-x-1.5 shrink-0">
-              <button onclick="openEditTaskModal(${t.id})" class="w-7 h-7 bg-slate-700 hover:bg-slate-600 text-slate-200 rounded-lg flex items-center justify-center text-xs">✏️</button>
               <button onclick="openDeleteTaskModal(${t.id})" class="w-7 h-7 bg-red-950/60 border border-red-800/80 hover:bg-red-900 text-red-300 rounded-lg flex items-center justify-center text-xs">🗑️</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    /* GESTIÓN DE HÁBITOS (HABIT TRACKER) */
+    function toggleHabitForm() {
+      document.getElementById('habit-form-card').classList.toggle('hidden');
+    }
+
+    function saveHabit() {
+      const title = document.getElementById('habit-title-input').value.trim();
+      const description = document.getElementById('habit-desc-input').value.trim();
+      const frequency = document.getElementById('habit-freq-input').value;
+      const targetCount = parseInt(document.getElementById('habit-target-input').value) || 1;
+
+      if (!title) {
+        alert('Ingresa el nombre del hábito.');
+        return;
+      }
+
+      const newHabit = {
+        id: Date.now(),
+        title,
+        description,
+        frequency,
+        targetCount,
+        remainingCount: targetCount,
+        completed: false
+      };
+
+      habits.unshift(newHabit);
+      saveUserData();
+
+      document.getElementById('habit-title-input').value = '';
+      document.getElementById('habit-desc-input').value = '';
+      document.getElementById('habit-target-input').value = '1';
+      toggleHabitForm();
+      renderHabits();
+    }
+
+    function decrementHabit(id) {
+      const h = habits.find(x => x.id === id);
+      if (!h) return;
+      if (h.remainingCount > 0) {
+        h.remainingCount--;
+        if (h.remainingCount === 0) h.completed = true;
+      } else {
+        // Reiniciar contador al pulsar si ya estaba completado
+        h.remainingCount = h.targetCount;
+        h.completed = false;
+      }
+      saveUserData();
+      renderHabits();
+    }
+
+    function toggleHabitDesc(id) {
+      const descEl = document.getElementById(`habit-desc-${id}`);
+      if (descEl) descEl.classList.toggle('hidden');
+    }
+
+    function openDeleteHabitModal(id) {
+      document.getElementById('delete-habit-id').value = id;
+      document.getElementById('delete-habit-modal').classList.remove('hidden');
+    }
+
+    function closeDeleteHabitModal() {
+      document.getElementById('delete-habit-modal').classList.add('hidden');
+    }
+
+    function confirmDeleteHabit() {
+      const id = parseInt(document.getElementById('delete-habit-id').value);
+      habits = habits.filter(x => x.id !== id);
+      saveUserData();
+      closeDeleteHabitModal();
+      renderHabits();
+    }
+
+    function renderHabits() {
+      const list = document.getElementById('habits-list');
+      if (habits.length === 0) {
+        list.innerHTML = '<p class="text-slate-500 text-center py-8 text-sm">No has añadido hábitos aún.</p>';
+        return;
+      }
+
+      list.innerHTML = habits.map(h => {
+        const isDone = h.remainingCount === 0;
+
+        return `
+          <div class="bg-slate-800 border ${isDone ? 'border-emerald-500/80 bg-emerald-950/10' : 'border-slate-700'} rounded-2xl p-4 space-y-2">
+            <div class="flex items-center justify-between gap-3">
+              <div class="flex-1 cursor-pointer" onclick="toggleHabitDesc(${h.id})">
+                <div class="flex items-center gap-2">
+                  <h4 class="text-sm font-bold ${isDone ? 'line-through text-slate-400' : 'text-white'}">${h.title}</h4>
+                  <span class="text-[10px] bg-slate-700 text-slate-300 font-semibold px-2 py-0.5 rounded-full">${h.frequency}</span>
+                </div>
+                ${h.description ? `<p class="text-xs text-slate-400 mt-1 italic hidden" id="habit-desc-${h.id}">💬 ${h.description}</p>` : ''}
+              </div>
+
+              <!-- Botón Contador / Cumplido -->
+              <button onclick="decrementHabit(${h.id})" class="w-12 h-12 rounded-xl font-bold flex flex-col items-center justify-center transition-all active:scale-90 ${isDone ? 'bg-emerald-500 text-white shadow-lg' : 'bg-slate-900 border border-slate-700 text-strava'}">
+                ${isDone ? '<span class="text-base">✓</span><span class="text-[9px] font-semibold">Listo</span>' : `<span class="text-base">${h.remainingCount}</span><span class="text-[8px] text-slate-400 font-medium">Quedan</span>`}
+              </button>
+
+              <button onclick="openDeleteHabitModal(${h.id})" class="text-slate-500 hover:text-red-400 text-xs px-1">✕</button>
             </div>
           </div>
         `;
@@ -1047,9 +1263,8 @@
               </div>
               <div class="flex items-center space-x-2">
                 <span class="text-xs font-mono font-bold text-strava mr-1">${formatSeconds(r.durationSec)}</span>
-                
-                <button onclick="openEditModal(${r.id})" class="w-7 h-7 bg-slate-700 hover:bg-slate-600 text-slate-200 rounded-lg flex items-center justify-center text-xs shadow-sm active:scale-90 transition-transform">✏️</button>
-                <button onclick="openDeleteModal(${r.id})" class="w-7 h-7 bg-red-950/60 border border-red-800/80 hover:bg-red-900 text-red-300 rounded-lg flex items-center justify-center text-xs shadow-sm active:scale-90 transition-transform">🗑️</button>
+                <button onclick="openEditModal(${r.id})" class="w-7 h-7 bg-slate-700 hover:bg-slate-600 text-slate-200 rounded-lg flex items-center justify-center text-xs">✏️</button>
+                <button onclick="openDeleteModal(${r.id})" class="w-7 h-7 bg-red-950/60 border border-red-800/80 hover:bg-red-900 text-red-300 rounded-lg flex items-center justify-center text-xs">🗑️</button>
               </div>
             </div>
             ${r.notes ? `<div class="text-xs text-slate-300 italic bg-slate-900/40 p-1.5 rounded">📝 ${r.notes}</div>` : ''}
@@ -1088,17 +1303,13 @@
       const endVal = document.getElementById('edit-end').value;
       const notes = document.getElementById('edit-notes').value.trim();
 
-      if (!startVal || !endVal) {
-        alert('Por favor selecciona hora de inicio y fin.');
-        return;
-      }
-
+      if (!startVal || !endVal) return;
       const startTime = new Date(startVal).getTime();
       const endTime = new Date(endVal).getTime();
       const durationSec = Math.floor((endTime - startTime) / 1000);
 
       if (durationSec <= 0) {
-        alert('La hora de fin debe ser posterior a la de inicio.');
+        alert('La hora de fin debe ser posterior a inicio.');
         return;
       }
 
@@ -1129,9 +1340,7 @@
     function confirmDeleteRecord() {
       const id = parseInt(document.getElementById('delete-id').value);
       const recordToDelete = records.find(r => r.id === id);
-      if (recordToDelete) {
-        sendToGoogleSheets(recordToDelete, 'delete');
-      }
+      if (recordToDelete) sendToGoogleSheets(recordToDelete, 'delete');
       records = records.filter(r => r.id !== id);
       saveUserData();
       closeDeleteModal();
@@ -1139,7 +1348,7 @@
     }
 
     function clearHistory() {
-      if (confirm(`¿Seguro que quieres borrar todos los registros de ${currentUser}?`)) {
+      if (confirm(`¿Borrar todo el historial de ${currentUser}?`)) {
         records.forEach(r => sendToGoogleSheets(r, 'delete'));
         records = [];
         saveUserData();
@@ -1179,10 +1388,7 @@
       const frequency = document.getElementById('goal-frequency').value;
       const targetHours = parseFloat(document.getElementById('goal-target-hours').value);
 
-      if (!targetHours || targetHours <= 0) {
-        alert('Ingresa una meta de horas válida.');
-        return;
-      }
+      if (!targetHours || targetHours <= 0) return;
 
       goals.push({
         id: Date.now(),
@@ -1263,7 +1469,7 @@
       }).join('');
     }
 
-    /* ESTADÍSTICAS */
+    /* ESTADÍSTICAS Y DESGLOSE EN MISMA BARRA */
     function setPeriod(p) {
       currentPeriod = p;
       ['day', 'week', 'month', 'year', 'all'].forEach(k => {
@@ -1307,7 +1513,7 @@
           const key = (currentGroupBy === 'category') ? r.category : r.activity;
           totals[key] = (totals[key] || 0) + r.durationSec;
         });
-        document.getElementById('chart-title').innerText = currentGroupBy === 'category' ? 'Por Categorías (Toca para desglosar)' : 'Por Actividades';
+        document.getElementById('chart-title').innerText = currentGroupBy === 'category' ? 'Por Categorías (Toca para desglosar)' : 'Por Actividades (Toca para ver notas)';
       }
 
       const totalsContainer = document.getElementById('stats-totals');
@@ -1319,7 +1525,7 @@
         totalsContainer.innerHTML = keys.map(k => {
           const catColor = getActivityColor(k);
           return `
-            <div onclick="toggleDrilldown('${k}')" class="bg-slate-800 border border-slate-700 hover:border-slate-500 rounded-xl p-3 cursor-pointer transition-all">
+            <div onclick="handleStatItemClick('${k}')" class="bg-slate-800 border border-slate-700 hover:border-slate-500 rounded-xl p-3 cursor-pointer transition-all">
               <div class="flex items-center gap-1.5">
                 <span class="w-2.5 h-2.5 rounded-full" style="background-color: ${catColor}"></span>
                 <span class="text-xs text-slate-300 font-medium truncate">${k}</span>
@@ -1349,9 +1555,9 @@
           responsive: true,
           maintainAspectRatio: false,
           onClick: (e, elements) => {
-            if (elements.length > 0 && currentGroupBy === 'category') {
-              const index = elements.index;
-              toggleDrilldown(keys[index]);
+            if (elements.length > 0) {
+              const index = elements[0].index;
+              handleStatItemClick(keys[index]);
             }
           },
           plugins: {
@@ -1368,14 +1574,50 @@
       });
     }
 
-    function toggleDrilldown(key) {
+    function handleStatItemClick(key) {
       if (categories[key]) {
+        // Es categoría: Drilldown
         selectedCategoryDrilldown = (selectedCategoryDrilldown === key) ? null : key;
         renderStats();
-      } else if (selectedCategoryDrilldown) {
-        selectedCategoryDrilldown = null;
-        renderStats();
+      } else {
+        // Es actividad individual: Mostrar registros detallados con notas en la misma pantalla
+        showActivityDrilldown(key);
       }
+    }
+
+    function showActivityDrilldown(activityName) {
+      const container = document.getElementById('activity-drilldown-container');
+      const titleEl = document.getElementById('drilldown-title');
+      const listEl = document.getElementById('drilldown-records-list');
+
+      const filtered = getFilteredRecords().filter(r => r.activity === activityName);
+
+      if (filtered.length === 0) return;
+
+      titleEl.innerText = `Registros de "${activityName}"`;
+
+      listEl.innerHTML = filtered.map(r => {
+        const d = new Date(r.startTime);
+        const dateStr = d.toLocaleDateString('es-ES', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+        const mins = (r.durationSec / 60).toFixed(1);
+
+        return `
+          <div class="bg-slate-900 border border-slate-700/80 rounded-xl p-2.5 space-y-1">
+            <div class="flex justify-between items-center text-xs">
+              <span class="text-slate-400 font-mono">${dateStr}</span>
+              <span class="text-strava font-bold font-mono">${formatSeconds(r.durationSec)} (${mins} min)</span>
+            </div>
+            ${r.notes ? `<p class="text-xs text-slate-200 italic bg-slate-800/80 p-1.5 rounded">📝 ${r.notes}</p>` : '<p class="text-[10px] text-slate-500 italic">Sin notas</p>'}
+          </div>
+        `;
+      }).join('');
+
+      container.classList.remove('hidden');
+      container.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function closeActivityDrilldown() {
+      document.getElementById('activity-drilldown-container').classList.add('hidden');
     }
 
     function formatSeconds(sec) {
@@ -1383,22 +1625,6 @@
       const mins = Math.floor((sec % 3600) / 60);
       const secs = sec % 60;
       return [hrs, mins, secs].map(v => v < 10 ? "0" + v : v).join(":");
-    }
-
-    function switchTab(tab) {
-      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-      document.getElementById('tab-' + tab).classList.remove('hidden');
-
-      document.querySelectorAll('nav button').forEach(el => {
-        el.classList.remove('text-strava');
-        el.classList.add('text-slate-400');
-      });
-      document.getElementById('nav-' + tab).classList.add('text-strava');
-      document.getElementById('nav-' + tab).classList.remove('text-slate-400');
-
-      if (tab === 'tasks') renderTasks();
-      if (tab === 'stats') renderStats();
-      if (tab === 'goals') renderGoals();
     }
   </script>
 </body>
