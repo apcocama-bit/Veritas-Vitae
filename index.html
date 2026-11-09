@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Time Tracker - Vitae Veritas</title>
+  <title>Time Tracker - Veritas Vitae</title>
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#0f172a">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -37,8 +37,21 @@
 
   <main class="max-w-md mx-auto p-4 space-y-6">
 
+    <!-- SECCIÓN 0: PANTALLA PRINCIPAL (INICIO CON CITA DE SÉNECA) -->
+    <div id="section-home" class="main-section flex flex-col items-center justify-center min-h-[65vh] text-center p-4">
+      <div class="bg-slate-800/90 border border-slate-700/80 backdrop-blur-md rounded-3xl p-8 shadow-2xl max-w-sm space-y-5 animate-fade-in">
+        <div class="text-4xl">🏛️</div>
+        <blockquote class="text-base font-serif italic text-slate-200 leading-relaxed">
+          “No es que tengamos poco tiempo para vivir, sino que desperdiciamos mucho de él y nada es nuestro, excepto el tiempo.”
+        </blockquote>
+        <div class="text-xs font-semibold uppercase tracking-widest text-strava pt-3 border-t border-slate-700/60">
+          — Séneca
+        </div>
+      </div>
+    </div>
+
     <!-- SECCIÓN 1: TIEMPO (CONTENEDOR DE SUB-TAB) -->
-    <div id="section-time" class="main-section space-y-6">
+    <div id="section-time" class="main-section hidden space-y-6">
 
       <!-- SUB-TAB 1: FICHERO -->
       <section id="tab-timer" class="time-tab-content space-y-5">
@@ -127,58 +140,7 @@
         </div>
       </section>
 
-      <!-- SUB-TAB 2: OBJETIVOS -->
-      <section id="tab-goals" class="time-tab-content hidden space-y-5">
-        <div class="flex justify-between items-center">
-          <h3 class="text-lg font-bold text-slate-200">Tus Objetivos</h3>
-          <button onclick="toggleGoalForm()" class="bg-strava hover:bg-orange-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg">+ Nueva Meta</button>
-        </div>
-
-        <!-- Formulario Nuevo Objetivo -->
-        <div id="goal-form-card" class="hidden bg-slate-800 border border-slate-700 rounded-2xl p-4 space-y-3">
-          <h4 class="text-sm font-semibold text-slate-200">Crear Nuevo Objetivo</h4>
-          
-          <div>
-            <label class="block text-xs text-slate-400 mb-1">Tipo de Meta</label>
-            <select id="goal-target-type" onchange="updateGoalTargetOptions()" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-xs">
-              <option value="category">Por Categoría</option>
-              <option value="activity">Por Actividad</option>
-            </select>
-          </div>
-
-          <div>
-            <label class="block text-xs text-slate-400 mb-1">Seleccionar Objetivo</label>
-            <select id="goal-target-value" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-xs"></select>
-          </div>
-
-          <div class="grid grid-cols-2 gap-3">
-            <div>
-              <label class="block text-xs text-slate-400 mb-1">Frecuencia</label>
-              <select id="goal-frequency" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-xs">
-                <option value="day">Diario</option>
-                <option value="week">Semanal</option>
-                <option value="month">Mensual</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-xs text-slate-400 mb-1">Horas Meta</label>
-              <input type="number" id="goal-target-hours" step="0.5" placeholder="Ej: 5" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-xs">
-            </div>
-          </div>
-
-          <div class="flex gap-2 pt-2">
-            <button onclick="saveGoal()" class="flex-1 bg-strava text-white text-xs font-bold py-2 rounded-xl">Guardar Objetivo</button>
-            <button onclick="toggleGoalForm()" class="bg-slate-700 text-slate-300 text-xs py-2 px-3 rounded-xl">Cancelar</button>
-          </div>
-        </div>
-
-        <!-- Lista de Objetivos -->
-        <div id="goals-list" class="space-y-3">
-          <p class="text-slate-500 text-center py-8 text-sm">No has configurado objetivos aún.</p>
-        </div>
-      </section>
-
-      <!-- SUB-TAB 3: HISTÓRICO -->
+      <!-- SUB-TAB 2: HISTÓRICO -->
       <section id="tab-history" class="time-tab-content hidden space-y-4">
         <div class="flex justify-between items-center">
           <h3 class="text-lg font-bold text-slate-200">Historial</h3>
@@ -192,7 +154,7 @@
         </div>
       </section>
 
-      <!-- SUB-TAB 4: ESTADÍSTICAS -->
+      <!-- SUB-TAB 3: ESTADÍSTICAS -->
       <section id="tab-stats" class="time-tab-content hidden space-y-5">
         <h3 class="text-lg font-bold text-slate-200">Resumen & Gráficas</h3>
         
@@ -229,7 +191,7 @@
         <!-- Totales -->
         <div id="stats-totals" class="grid grid-cols-2 gap-3"></div>
 
-        <!-- Desglose de Registros Individuales de Actividad -->
+        <!-- Desglose de Registros Individuales -->
         <div id="activity-drilldown-container" class="hidden bg-slate-800 border border-slate-700 rounded-2xl p-4 space-y-3">
           <div class="flex justify-between items-center border-b border-slate-700 pb-2">
             <h4 id="drilldown-title" class="text-sm font-bold text-strava">Registros de Actividad</h4>
@@ -273,7 +235,7 @@
           </label>
         </div>
 
-        <!-- Selector de días si es recurrente -->
+        <!-- Selector de días recurrente -->
         <div id="task-days-container" class="hidden bg-slate-900/60 p-2.5 rounded-xl border border-slate-700 space-y-1">
           <span class="text-[10px] text-slate-400 font-bold uppercase">Días de repetición:</span>
           <div class="flex justify-between gap-1">
@@ -299,7 +261,7 @@
       </div>
     </div>
 
-    <!-- SECCIÓN 3: HÁBITOS (CON VINCULACIÓN A ACTIVIDAD Y COLOR) -->
+    <!-- SECCIÓN 3: HÁBITOS (CON RACHA, HEATMAP Y TIEMPO MÍNIMO) -->
     <div id="section-habits" class="main-section hidden space-y-5">
       <div class="flex justify-between items-center">
         <h3 class="text-lg font-bold text-slate-200">Hábitos</h3>
@@ -312,7 +274,7 @@
         
         <div>
           <label class="block text-xs text-slate-400 mb-1">Nombre del Hábito</label>
-          <input type="text" id="habit-title-input" placeholder="Ej: Beber agua, Meditar..." class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-slate-100">
+          <input type="text" id="habit-title-input" placeholder="Ej: Meditar, Leer, Correr..." class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-slate-100">
         </div>
 
         <div>
@@ -326,7 +288,7 @@
           <textarea id="habit-desc-input" rows="2" placeholder="Detalles o motivación de este hábito..." class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-slate-100"></textarea>
         </div>
 
-        <div class="grid grid-cols-2 gap-3">
+        <div class="grid grid-cols-3 gap-2">
           <div>
             <label class="block text-xs text-slate-400 mb-1">Frecuencia</label>
             <select id="habit-freq-input" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-xs">
@@ -339,6 +301,10 @@
             <label class="block text-xs text-slate-400 mb-1">Repeticiones</label>
             <input type="number" id="habit-target-input" value="1" min="1" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-xs">
           </div>
+          <div>
+            <label class="block text-xs text-slate-400 mb-1">Tiempo Mín (min)</label>
+            <input type="number" id="habit-min-time-input" value="" min="0" placeholder="Opcional" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-xs">
+          </div>
         </div>
 
         <div class="flex gap-2 pt-2">
@@ -348,7 +314,7 @@
       </div>
 
       <!-- Lista de Hábitos -->
-      <div id="habits-list" class="space-y-3">
+      <div id="habits-list" class="space-y-3.5">
         <p class="text-slate-500 text-center py-8 text-sm">No has añadido hábitos aún.</p>
       </div>
     </div>
@@ -359,7 +325,7 @@
   
   <!-- 1. Menú Inferior de las 3 Secciones Principales -->
   <nav id="main-nav" class="fixed bottom-0 left-0 right-0 bg-slate-800/95 backdrop-blur-md border-t border-slate-700 flex justify-around p-2 z-20">
-    <button onclick="enterTimeSection()" id="main-btn-time" class="flex flex-col items-center py-1 px-4 text-strava font-semibold text-[10px]">
+    <button onclick="enterTimeSection()" id="main-btn-time" class="flex flex-col items-center py-1 px-4 text-slate-400 font-semibold text-[10px]">
       <span class="text-lg">⏱️</span>
       <span>Tiempo</span>
     </button>
@@ -375,25 +341,69 @@
 
   <!-- 2. Menú Inferior de Sub-pestañas de TIEMPO -->
   <nav id="time-subnav" class="hidden fixed bottom-0 left-0 right-0 bg-slate-800/95 backdrop-blur-md border-t border-slate-700 flex justify-around p-2 z-20">
-    <button onclick="switchTimeTab('timer')" id="nav-timer" class="flex flex-col items-center py-1 px-3 text-strava font-semibold text-[10px]">
+    <button onclick="switchTimeTab('timer')" id="nav-timer" class="flex flex-col items-center py-1 px-5 text-strava font-semibold text-[10px]">
       <span class="text-base">⏱️</span>
       <span>Fichar</span>
     </button>
-    <button onclick="switchTimeTab('goals')" id="nav-goals" class="flex flex-col items-center py-1 px-3 text-slate-400 font-semibold text-[10px]">
-      <span class="text-base">🎯</span>
-      <span>Objetivos</span>
-    </button>
-    <button onclick="switchTimeTab('history')" id="nav-history" class="flex flex-col items-center py-1 px-3 text-slate-400 font-semibold text-[10px]">
+    <button onclick="switchTimeTab('history')" id="nav-history" class="flex flex-col items-center py-1 px-5 text-slate-400 font-semibold text-[10px]">
       <span class="text-base">📋</span>
       <span>Histórico</span>
     </button>
-    <button onclick="switchTimeTab('stats')" id="nav-stats" class="flex flex-col items-center py-1 px-3 text-slate-400 font-semibold text-[10px]">
+    <button onclick="switchTimeTab('stats')" id="nav-stats" class="flex flex-col items-center py-1 px-5 text-slate-400 font-semibold text-[10px]">
       <span class="text-base">📊</span>
       <span>Gráficas</span>
     </button>
   </nav>
 
-  <!-- MODALES DE CONFIGURACIÓN Y EDICIÓN -->
+  <!-- MODAL DE EDICIÓN DE HÁBITO -->
+  <div id="edit-habit-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden">
+    <div class="bg-slate-800 border border-slate-700 rounded-2xl p-5 w-full max-w-sm space-y-4">
+      <h3 class="text-base font-bold text-slate-200">Editar Hábito</h3>
+      <input type="hidden" id="edit-habit-id">
+      
+      <div>
+        <label class="block text-xs text-slate-400 mb-1">Nombre del Hábito</label>
+        <input type="text" id="edit-habit-title" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-slate-100">
+      </div>
+
+      <div>
+        <label class="block text-xs text-slate-400 mb-1">Categoría y Actividad</label>
+        <select id="edit-habit-activity" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-slate-100">
+        </select>
+      </div>
+
+      <div>
+        <label class="block text-xs text-slate-400 mb-1">Descripción / Notas</label>
+        <textarea id="edit-habit-desc" rows="2" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-slate-100"></textarea>
+      </div>
+
+      <div class="grid grid-cols-3 gap-2">
+        <div>
+          <label class="block text-xs text-slate-400 mb-1">Frecuencia</label>
+          <select id="edit-habit-freq" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-xs">
+            <option value="Diario">Diario</option>
+            <option value="Semanal">Semanal</option>
+            <option value="Mensual">Mensual</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs text-slate-400 mb-1">Repeticiones</label>
+          <input type="number" id="edit-habit-target" min="1" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-xs">
+        </div>
+        <div>
+          <label class="block text-xs text-slate-400 mb-1">Tiempo Mín (min)</label>
+          <input type="number" id="edit-habit-min-time" min="0" placeholder="Opcional" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-xs">
+        </div>
+      </div>
+
+      <div class="flex gap-2 pt-2">
+        <button onclick="saveEditedHabit()" class="flex-1 bg-strava text-white text-xs font-bold py-2.5 rounded-xl">Guardar Cambios</button>
+        <button onclick="closeEditHabitModal()" class="bg-slate-700 text-slate-300 text-xs py-2.5 px-4 rounded-xl">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- OTROS MODALES DE CONFIGURACIÓN Y EDICIÓN -->
   <div id="user-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden">
     <div class="bg-slate-800 border border-slate-700 rounded-2xl p-5 w-full max-w-sm text-center space-y-4 max-h-[85vh] flex flex-col">
       <h3 class="text-base font-bold text-slate-200">Seleccionar Usuario</h3>
@@ -533,7 +543,6 @@
     let categories = {};
     let activeTimer = null;
     let records = [];
-    let goals = [];
     let tasks = [];
     let habits = [];
 
@@ -550,35 +559,28 @@
     }
 
     function loadUserData() {
-  // 1. Intentar cargar categorías del usuario actual; si no existen, buscar en claves antiguas
-  let savedCat = localStorage.getItem(getStorageKey('categories'));
-  if (!savedCat) {
-    savedCat = localStorage.getItem('tt_categories') || localStorage.getItem('categories');
-    if (savedCat) {
-      // Migrar automáticamente a la nueva clave de usuario
-      localStorage.setItem(getStorageKey('categories'), savedCat);
+      let savedCat = localStorage.getItem(getStorageKey('categories')) || localStorage.getItem('tt_categories') || localStorage.getItem('categories');
+      if (savedCat && !localStorage.getItem(getStorageKey('categories'))) {
+        localStorage.setItem(getStorageKey('categories'), savedCat);
+      }
+      categories = savedCat ? JSON.parse(savedCat) : JSON.parse(JSON.stringify(DEFAULT_CATEGORIES));
+
+      activeTimer = JSON.parse(localStorage.getItem(getStorageKey('active'))) || null;
+      
+      let savedRecords = localStorage.getItem(getStorageKey('records')) || localStorage.getItem('tt_records') || localStorage.getItem('records');
+      if (savedRecords && !localStorage.getItem(getStorageKey('records'))) {
+        localStorage.setItem(getStorageKey('records'), savedRecords);
+      }
+      records = savedRecords ? JSON.parse(savedRecords) : [];
+
+      tasks = JSON.parse(localStorage.getItem(getStorageKey('tasks'))) || [];
+      habits = JSON.parse(localStorage.getItem(getStorageKey('habits'))) || [];
     }
-  }
-  categories = savedCat ? JSON.parse(savedCat) : JSON.parse(JSON.stringify(DEFAULT_CATEGORIES));
-
-  // 2. Migrar registros de fichaje
-  let savedRecords = localStorage.getItem(getStorageKey('records')) || localStorage.getItem('tt_records') || localStorage.getItem('records');
-  if (savedRecords && !localStorage.getItem(getStorageKey('records'))) {
-    localStorage.setItem(getStorageKey('records'), savedRecords);
-  }
-  records = savedRecords ? JSON.parse(savedRecords) : [];
-
-  // 3. Cargar Objetivos, Tareas y Hábitos
-  goals = JSON.parse(localStorage.getItem(getStorageKey('goals'))) || [];
-  tasks = JSON.parse(localStorage.getItem(getStorageKey('tasks'))) || [];
-  habits = JSON.parse(localStorage.getItem(getStorageKey('habits'))) || [];
-}
 
     function saveUserData() {
       localStorage.setItem(getStorageKey('categories'), JSON.stringify(categories));
       localStorage.setItem(getStorageKey('active'), JSON.stringify(activeTimer));
       localStorage.setItem(getStorageKey('records'), JSON.stringify(records));
-      localStorage.setItem(getStorageKey('goals'), JSON.stringify(goals));
       localStorage.setItem(getStorageKey('tasks'), JSON.stringify(tasks));
       localStorage.setItem(getStorageKey('habits'), JSON.stringify(habits));
       localStorage.setItem('tt_user_list', JSON.stringify(userList));
@@ -588,6 +590,7 @@
       loadUserData();
       updateUserDisplay();
       populateActivitySelects();
+      goBackToMainSections(); // Iniciar siempre en la pantalla principal con la cita
       renderUI();
       if (activeTimer) startTimerInterval();
       if ('serviceWorker' in navigator) {
@@ -595,14 +598,30 @@
       }
     });
 
-    /* NAVEGACIÓN DINÁMICA DE 3 SECCIONES -> SUB-PESTAÑAS EN LA BARRA INFERIOR */
+    /* NAVEGACIÓN PRINCIPAL & PANTALLA INICIO DE SÉNECA */
+    function goBackToMainSections() {
+      document.querySelectorAll('.main-section').forEach(el => el.classList.add('hidden'));
+      document.getElementById('section-home').classList.remove('hidden');
+
+      document.getElementById('main-nav').classList.remove('hidden');
+      document.getElementById('time-subnav').classList.add('hidden');
+      document.getElementById('back-btn').classList.add('hidden');
+
+      document.getElementById('header-title').innerText = 'Vitae Veritas';
+
+      ['time', 'tasks', 'habits'].forEach(s => {
+        const btn = document.getElementById('main-btn-' + s);
+        if (btn) btn.className = "flex flex-col items-center py-1 px-4 text-slate-400 font-semibold text-[10px]";
+      });
+    }
+
     function switchMainSection(section) {
       document.querySelectorAll('.main-section').forEach(el => el.classList.add('hidden'));
       document.getElementById('section-' + section).classList.remove('hidden');
 
       document.getElementById('main-nav').classList.remove('hidden');
       document.getElementById('time-subnav').classList.add('hidden');
-      document.getElementById('back-btn').classList.add('hidden');
+      document.getElementById('back-btn').classList.remove('hidden');
 
       const titleMap = { time: 'Tiempo', tasks: 'Tareas', habits: 'Hábitos' };
       document.getElementById('header-title').innerText = titleMap[section] || 'Vitae Veritas';
@@ -632,10 +651,6 @@
       switchTimeTab('timer');
     }
 
-    function goBackToMainSections() {
-      switchMainSection('time');
-    }
-
     function switchTimeTab(tab) {
       document.querySelectorAll('.time-tab-content').forEach(el => el.classList.add('hidden'));
       document.getElementById('tab-' + tab).classList.remove('hidden');
@@ -648,7 +663,6 @@
       document.getElementById('nav-' + tab).classList.remove('text-slate-400');
 
       if (tab === 'stats') renderStats();
-      if (tab === 'goals') renderGoals();
     }
 
     /* BOTÓN AHORA (NOW) */
@@ -714,6 +728,7 @@
       loadUserData();
       updateUserDisplay();
       populateActivitySelects();
+      goBackToMainSections();
       renderUI();
       if (activeTimer) startTimerInterval();
       document.getElementById('user-modal').classList.add('hidden');
@@ -747,8 +762,9 @@
       const manualSel = document.getElementById('manual-activity-select');
       const editSel = document.getElementById('edit-activity');
       const habitSel = document.getElementById('habit-activity-select');
-      let html = '';
+      const editHabitSel = document.getElementById('edit-habit-activity');
 
+      let html = '';
       Object.keys(categories).forEach(cat => {
         html += `<optgroup label="${cat}">`;
         categories[cat].items.forEach(act => {
@@ -761,6 +777,7 @@
       if (manualSel) manualSel.innerHTML = html;
       if (editSel) editSel.innerHTML = html;
       if (habitSel) habitSel.innerHTML = html;
+      if (editHabitSel) editHabitSel.innerHTML = html;
       autoAssignCategory();
     }
 
@@ -1055,7 +1072,6 @@
       renderHistory();
       renderTasks();
       renderHabits();
-      renderGoals();
       renderStats();
     }
 
@@ -1188,7 +1204,7 @@
       }).join('');
     }
 
-    /* GESTIÓN DE HÁBITOS (HABIT TRACKER VINCULADO Y AUTOMÁTICO) */
+    /* GESTIÓN DE HÁBITOS (CON HEATMAP, EDICIÓN Y TIEMPO MÍNIMO OPCIONAL) */
     function toggleHabitForm() {
       document.getElementById('habit-form-card').classList.toggle('hidden');
     }
@@ -1199,6 +1215,8 @@
       const description = document.getElementById('habit-desc-input').value.trim();
       const frequency = document.getElementById('habit-freq-input').value;
       const targetCount = parseInt(document.getElementById('habit-target-input').value) || 1;
+      const minMinutesVal = document.getElementById('habit-min-time-input').value;
+      const minMinutes = minMinutesVal !== "" ? (parseInt(minMinutesVal) || 0) : 0;
 
       if (!title) {
         alert('Ingresa el nombre del hábito.');
@@ -1209,8 +1227,8 @@
       let activity = 'General';
       if (val) {
         const parts = val.split('|');
-        category = parts[0];
-        activity = parts[1];
+        category = parts;
+        activity = parts;
       }
 
       const newHabit = {
@@ -1220,7 +1238,9 @@
         activity,
         description,
         frequency,
-        targetCount
+        targetCount,
+        minMinutes,
+        manualLogs: {}
       };
 
       habits.unshift(newHabit);
@@ -1229,8 +1249,68 @@
       document.getElementById('habit-title-input').value = '';
       document.getElementById('habit-desc-input').value = '';
       document.getElementById('habit-target-input').value = '1';
+      document.getElementById('habit-min-time-input').value = '';
       toggleHabitForm();
       renderHabits();
+    }
+
+    function incrementHabitManual(id) {
+      const h = habits.find(x => x.id === id);
+      if (!h) return;
+      
+      const todayStr = new Date().toISOString().split('T');
+      if (!h.manualLogs) h.manualLogs = {};
+      h.manualLogs[todayStr] = (h.manualLogs[todayStr] || 0) + 1;
+
+      saveUserData();
+      renderHabits();
+    }
+
+    function openEditHabitModal(id) {
+      const h = habits.find(x => x.id === id);
+      if (!h) return;
+
+      document.getElementById('edit-habit-id').value = id;
+      document.getElementById('edit-habit-title').value = h.title;
+      document.getElementById('edit-habit-activity').value = `${h.category}|${h.activity}`;
+      document.getElementById('edit-habit-desc').value = h.description || '';
+      document.getElementById('edit-habit-freq').value = h.frequency;
+      document.getElementById('edit-habit-target').value = h.targetCount;
+      document.getElementById('edit-habit-min-time').value = (h.minMinutes > 0) ? h.minMinutes : '';
+
+      document.getElementById('edit-habit-modal').classList.remove('hidden');
+    }
+
+    function closeEditHabitModal() {
+      document.getElementById('edit-habit-modal').classList.add('hidden');
+    }
+
+    function saveEditedHabit() {
+      const id = parseInt(document.getElementById('edit-habit-id').value);
+      const title = document.getElementById('edit-habit-title').value.trim();
+      const val = document.getElementById('edit-habit-activity').value;
+      const description = document.getElementById('edit-habit-desc').value.trim();
+      const frequency = document.getElementById('edit-habit-freq').value;
+      const targetCount = parseInt(document.getElementById('edit-habit-target').value) || 1;
+      const minMinutesVal = document.getElementById('edit-habit-min-time').value;
+      const minMinutes = minMinutesVal !== "" ? (parseInt(minMinutesVal) || 0) : 0;
+
+      if (!title) return;
+
+      const h = habits.find(x => x.id === id);
+      if (h) {
+        const [category, activity] = val.split('|');
+        h.title = title;
+        h.category = category;
+        h.activity = activity;
+        h.description = description;
+        h.frequency = frequency;
+        h.targetCount = targetCount;
+        h.minMinutes = minMinutes;
+        saveUserData();
+        renderHabits();
+      }
+      closeEditHabitModal();
     }
 
     function toggleHabitDesc(id) {
@@ -1255,6 +1335,40 @@
       renderHabits();
     }
 
+    function isHabitDoneOnDate(h, targetDate) {
+      const dateStr = targetDate.toISOString().split('T');
+      
+      const dayRecords = records.filter(r => {
+        if (r.category !== h.category || r.activity !== h.activity) return false;
+        const rDate = new Date(r.startTime).toISOString().split('T');
+        return rDate === dateStr;
+      });
+
+      const manualCount = (h.manualLogs && h.manualLogs[dateStr]) || 0;
+      const totalReps = dayRecords.length + manualCount;
+      const totalDurationMin = dayRecords.reduce((acc, r) => acc + (r.durationSec / 60), 0);
+
+      const repsDone = totalReps >= h.targetCount;
+      const timeDone = (!h.minMinutes || h.minMinutes === 0) || (totalDurationMin >= h.minMinutes);
+
+      return repsDone && timeDone;
+    }
+
+    function calculateStreak(h) {
+      let streak = 0;
+      let checkDate = new Date();
+      
+      if (!isHabitDoneOnDate(h, checkDate)) {
+        checkDate.setDate(checkDate.getDate() - 1);
+      }
+
+      while (isHabitDoneOnDate(h, checkDate)) {
+        streak++;
+        checkDate.setDate(checkDate.getDate() - 1);
+      }
+      return streak;
+    }
+
     function renderHabits() {
       const list = document.getElementById('habits-list');
       if (habits.length === 0) {
@@ -1262,46 +1376,95 @@
         return;
       }
 
-      const now = new Date();
+      const today = new Date();
+      const todayStr = today.toISOString().split('T');
 
       list.innerHTML = habits.map(h => {
-        // Calcular de los registros reales (records) cuántos se han realizado en el período
-        const matchingRecords = records.filter(r => {
-          if (r.category !== h.category || r.activity !== h.activity) return false;
-          const rDate = new Date(r.startTime);
-          if (h.frequency === 'Diario') {
-            return rDate.toDateString() === now.toDateString();
-          } else if (h.frequency === 'Semanal') {
-            return rDate >= new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-          } else if (h.frequency === 'Mensual') {
-            return rDate.getMonth() === now.getMonth() && rDate.getFullYear() === now.getFullYear();
-          }
-          return true;
-        });
-
-        const completedCount = matchingRecords.length;
-        const remainingCount = Math.max(0, h.targetCount - completedCount);
-        const isDone = remainingCount === 0;
         const catColor = getActivityColor(h.category);
 
+        const todayRecords = records.filter(r => {
+          if (r.category !== h.category || r.activity !== h.activity) return false;
+          return new Date(r.startTime).toISOString().split('T') === todayStr;
+        });
+
+        const todayManual = (h.manualLogs && h.manualLogs[todayStr]) || 0;
+        const totalRepsToday = todayRecords.length + todayManual;
+        const totalMinutesToday = Math.round(todayRecords.reduce((acc, r) => acc + (r.durationSec / 60), 0));
+
+        const isRepsDone = totalRepsToday >= h.targetCount;
+        const hasMinTime = h.minMinutes && h.minMinutes > 0;
+        const isTimeDone = !hasMinTime || (totalMinutesToday >= h.minMinutes);
+        const isDoneToday = isRepsDone && isTimeDone;
+
+        const streak = calculateStreak(h);
+
+        // Heatmap de 7 días
+        const daySquares = [];
+        const dayNames = ['D', 'L', 'M', 'X', 'J', 'V', 'S'];
+        for (let i = 6; i >= 0; i--) {
+          const d = new Date();
+          d.setDate(today.getDate() - i);
+          const isDone = isHabitDoneOnDate(h, d);
+          const dayName = dayNames[d.getDay()];
+
+          daySquares.push(`
+            <div class="flex flex-col items-center gap-1">
+              <div class="w-6 h-6 rounded-md transition-all flex items-center justify-center text-[10px] font-bold ${isDone ? 'text-slate-950 shadow-sm' : 'bg-slate-900 border border-slate-700/60 text-slate-600'}" style="${isDone ? `background-color: ${catColor}` : ''}">
+                ${isDone ? '✓' : ''}
+              </div>
+              <span class="text-[9px] text-slate-400 font-semibold">${dayName}</span>
+            </div>
+          `);
+        }
+
         return `
-          <div class="bg-slate-800 border-2 rounded-2xl p-4 space-y-2 shadow-sm transition-all" style="border-color: ${isDone ? '#10b981' : catColor}">
-            <div class="flex items-center justify-between gap-3">
+          <div class="bg-slate-800 border-2 rounded-2xl p-4 space-y-3 shadow-sm transition-all" style="border-color: ${isDoneToday ? '#10b981' : catColor}">
+            <!-- Categoría, Título y Botones -->
+            <div class="flex items-start justify-between gap-2">
               <div class="flex-1 cursor-pointer" onclick="toggleHabitDesc(${h.id})">
                 <div class="flex items-center gap-2 flex-wrap">
-                  <h4 class="text-sm font-bold ${isDone ? 'line-through text-slate-400' : 'text-white'}">${h.title}</h4>
+                  <h4 class="text-base font-bold ${isDoneToday ? 'line-through text-slate-400' : 'text-white'}">${h.title}</h4>
                   <span class="text-[10px] font-bold px-2 py-0.5 rounded-full text-slate-900" style="background-color: ${catColor}">${h.category} • ${h.activity}</span>
-                  <span class="text-[10px] bg-slate-700 text-slate-300 font-semibold px-2 py-0.5 rounded-full">${h.frequency}</span>
                 </div>
                 ${h.description ? `<p class="text-xs text-slate-400 mt-1 italic hidden" id="habit-desc-${h.id}">💬 ${h.description}</p>` : ''}
               </div>
 
-              <!-- Contador Dinámico que decrementa al fichar -->
-              <div class="w-12 h-12 rounded-xl font-bold flex flex-col items-center justify-center transition-all ${isDone ? 'bg-emerald-500 text-white shadow-lg' : 'bg-slate-900 border border-slate-700 text-strava'}">
-                ${isDone ? '<span class="text-base">✓</span><span class="text-[9px] font-semibold">Listo</span>' : `<span class="text-base">${remainingCount}</span><span class="text-[8px] text-slate-400 font-medium">Quedan</span>`}
+              <div class="flex items-center gap-1.5 shrink-0">
+                <button onclick="openEditHabitModal(${h.id})" class="w-7 h-7 bg-slate-700 hover:bg-slate-600 text-slate-200 rounded-lg flex items-center justify-center text-xs">✏️</button>
+                <button onclick="openDeleteHabitModal(${h.id})" class="w-7 h-7 bg-red-950/60 border border-red-800/80 hover:bg-red-900 text-red-300 rounded-lg flex items-center justify-center text-xs">🗑️</button>
+              </div>
+            </div>
+
+            <!-- Progreso del día -->
+            <div class="flex justify-between items-center bg-slate-900/60 p-2.5 rounded-xl border border-slate-700/50 text-xs">
+              <div class="space-y-0.5">
+                <div class="text-slate-300 font-semibold">
+                  Repeticiones: <span class="font-mono ${isRepsDone ? 'text-emerald-400 font-bold' : 'text-strava'}">${totalRepsToday} / ${h.targetCount}</span>
+                </div>
+                ${hasMinTime ? `
+                  <div class="text-slate-300 font-semibold">
+                    Tiempo mín: <span class="font-mono ${isTimeDone ? 'text-emerald-400 font-bold' : 'text-strava'}">${totalMinutesToday} / ${h.minMinutes} min</span>
+                  </div>
+                ` : ''}
               </div>
 
-              <button onclick="openDeleteHabitModal(${h.id})" class="text-slate-500 hover:text-red-400 text-xs px-1">✕</button>
+              <!-- Botón Manual +1 -->
+              <button onclick="incrementHabitManual(${h.id})" class="px-3 py-2 rounded-xl font-bold text-xs flex items-center gap-1 transition-all active:scale-90 ${isDoneToday ? 'bg-emerald-500 text-white shadow-md' : 'bg-strava hover:bg-orange-600 text-white shadow-sm'}">
+                <span>${isDoneToday ? '✓ Listo' : '➕ Cumplir (+1)'}</span>
+              </button>
+            </div>
+
+            <!-- Heatmap 7 días & Racha -->
+            <div class="pt-1 flex items-center justify-between border-t border-slate-700/50">
+              <div class="flex gap-1.5">
+                ${daySquares.join('')}
+              </div>
+              <div class="text-right">
+                <span class="text-xs font-bold text-orange-400 flex items-center gap-1">
+                  <span>🔥</span> <span>${streak} días</span>
+                </span>
+                <span class="block text-[9px] text-slate-500 font-medium">Racha activa</span>
+              </div>
             </div>
           </div>
         `;
@@ -1419,119 +1582,6 @@
         saveUserData();
         renderUI();
       }
-    }
-
-    /* OBJETIVOS */
-    function toggleGoalForm() {
-      const card = document.getElementById('goal-form-card');
-      card.classList.toggle('hidden');
-      if (!card.classList.contains('hidden')) updateGoalTargetOptions();
-    }
-
-    function updateGoalTargetOptions() {
-      const type = document.getElementById('goal-target-type').value;
-      const valSelect = document.getElementById('goal-target-value');
-      let html = '';
-
-      if (type === 'category') {
-        Object.keys(categories).forEach(c => {
-          html += `<option value="${c}">${c}</option>`;
-        });
-      } else {
-        Object.keys(categories).forEach(cat => {
-          categories[cat].items.forEach(act => {
-            html += `<option value="${act}">${act} (${cat})</option>`;
-          });
-        });
-      }
-      valSelect.innerHTML = html;
-    }
-
-    function saveGoal() {
-      const targetType = document.getElementById('goal-target-type').value;
-      const targetValue = document.getElementById('goal-target-value').value;
-      const frequency = document.getElementById('goal-frequency').value;
-      const targetHours = parseFloat(document.getElementById('goal-target-hours').value);
-
-      if (!targetHours || targetHours <= 0) return;
-
-      goals.push({
-        id: Date.now(),
-        targetType,
-        targetValue,
-        frequency,
-        targetHours
-      });
-
-      saveUserData();
-      toggleGoalForm();
-      renderGoals();
-    }
-
-    function deleteGoal(id) {
-      goals = goals.filter(g => g.id !== id);
-      saveUserData();
-      renderGoals();
-    }
-
-    function renderGoals() {
-      const container = document.getElementById('goals-list');
-      if (goals.length === 0) {
-        container.innerHTML = '<p class="text-slate-500 text-center py-8 text-sm">No has configurado objetivos aún.</p>';
-        return;
-      }
-
-      const now = new Date();
-
-      container.innerHTML = goals.map(g => {
-        const filtered = records.filter(r => {
-          const rDate = new Date(r.startTime);
-          if (g.frequency === 'day') {
-            return rDate.toDateString() === now.toDateString();
-          } else if (g.frequency === 'week') {
-            return rDate >= new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-          } else if (g.frequency === 'month') {
-            return rDate.getMonth() === now.getMonth() && rDate.getFullYear() === now.getFullYear();
-          }
-          return true;
-        });
-
-        const totalSec = filtered.reduce((acc, r) => {
-          const match = (g.targetType === 'category') ? (r.category === g.targetValue) : (r.activity === g.targetValue);
-          return match ? acc + r.durationSec : acc;
-        }, 0);
-
-        const currentHours = totalSec / 3600;
-        const percent = Math.min(Math.round((currentHours / g.targetHours) * 100), 100);
-        const isCompleted = percent >= 100;
-
-        const freqText = { day: 'Diario', week: 'Semanal', month: 'Mensual' }[g.frequency];
-
-        return `
-          <div class="bg-slate-800 border ${isCompleted ? 'border-emerald-500/80 bg-emerald-950/10' : 'border-slate-700'} rounded-2xl p-4 space-y-3">
-            <div class="flex justify-between items-start">
-              <div>
-                <div class="text-xs text-slate-400 font-medium">${g.targetType === 'category' ? 'Categoría' : 'Actividad'} • ${freqText}</div>
-                <div class="text-base font-bold text-white mt-0.5">${g.targetValue}</div>
-              </div>
-              <div class="flex items-center gap-2">
-                ${isCompleted ? '<span class="bg-emerald-500/20 text-emerald-400 text-xs font-bold px-2.5 py-1 rounded-full border border-emerald-500/30">✓ Completado</span>' : ''}
-                <button onclick="deleteGoal(${g.id})" class="text-slate-500 hover:text-red-400 text-xs">✕</button>
-              </div>
-            </div>
-
-            <div>
-              <div class="flex justify-between text-xs font-mono mb-1">
-                <span class="text-slate-300">${currentHours.toFixed(1)} hrs</span>
-                <span class="text-slate-400">Meta: ${g.targetHours} hrs</span>
-              </div>
-              <div class="w-full bg-slate-900 rounded-full h-2.5 overflow-hidden border border-slate-700/50">
-                <div class="h-2.5 rounded-full transition-all duration-500 ${isCompleted ? 'bg-emerald-500' : 'bg-strava'}" style="width: ${percent}%"></div>
-              </div>
-            </div>
-          </div>
-        `;
-      }).join('');
     }
 
     /* ESTADÍSTICAS Y DESGLOSE INTERACTIVO */
