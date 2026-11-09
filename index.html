@@ -550,13 +550,29 @@
     }
 
     function loadUserData() {
-      categories = JSON.parse(localStorage.getItem(getStorageKey('categories'))) || JSON.parse(JSON.stringify(DEFAULT_CATEGORIES));
-      activeTimer = JSON.parse(localStorage.getItem(getStorageKey('active'))) || null;
-      records = JSON.parse(localStorage.getItem(getStorageKey('records'))) || [];
-      goals = JSON.parse(localStorage.getItem(getStorageKey('goals'))) || [];
-      tasks = JSON.parse(localStorage.getItem(getStorageKey('tasks'))) || [];
-      habits = JSON.parse(localStorage.getItem(getStorageKey('habits'))) || [];
+  // 1. Intentar cargar categorías del usuario actual; si no existen, buscar en claves antiguas
+  let savedCat = localStorage.getItem(getStorageKey('categories'));
+  if (!savedCat) {
+    savedCat = localStorage.getItem('tt_categories') || localStorage.getItem('categories');
+    if (savedCat) {
+      // Migrar automáticamente a la nueva clave de usuario
+      localStorage.setItem(getStorageKey('categories'), savedCat);
     }
+  }
+  categories = savedCat ? JSON.parse(savedCat) : JSON.parse(JSON.stringify(DEFAULT_CATEGORIES));
+
+  // 2. Migrar registros de fichaje
+  let savedRecords = localStorage.getItem(getStorageKey('records')) || localStorage.getItem('tt_records') || localStorage.getItem('records');
+  if (savedRecords && !localStorage.getItem(getStorageKey('records'))) {
+    localStorage.setItem(getStorageKey('records'), savedRecords);
+  }
+  records = savedRecords ? JSON.parse(savedRecords) : [];
+
+  // 3. Cargar Objetivos, Tareas y Hábitos
+  goals = JSON.parse(localStorage.getItem(getStorageKey('goals'))) || [];
+  tasks = JSON.parse(localStorage.getItem(getStorageKey('tasks'))) || [];
+  habits = JSON.parse(localStorage.getItem(getStorageKey('habits'))) || [];
+}
 
     function saveUserData() {
       localStorage.setItem(getStorageKey('categories'), JSON.stringify(categories));
